@@ -1,0 +1,17 @@
+{
+	"name": "ink",
+	"tree": {
+		"$className": "DataModel",
+		"ReplicatedStorage": {
+			"ink": {
+				"$className": "Folder",
+				"examples": {
+					"$path": "./examples"
+				},
+				"src": {
+					"$path": "./src"
+				}
+			}
+		}
+	}
+}

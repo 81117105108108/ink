@@ -1,0 +1,21 @@
+local TextService = game:GetService("TextService")
+
+local types = require("../types")
+
+const function text(content: string, style: types.TextStyle, max_width: number?): types.Composite
+	const frame = Vector2.new(max_width or math.huge, math.huge)
+	const size = TextService:GetTextSize(content, style.size, style.font, frame)
+	const bounds = Rect.new(Vector2.zero, size)
+
+	const primitive: types.Primitive = {
+		bounds = bounds,
+		color = Color3.new(1, 1, 1),
+		transparency = 0,
+		text = content,
+		text_style = style,
+	}
+
+	return { primitives = { primitive }, bounds = bounds }
+end
+
+return text

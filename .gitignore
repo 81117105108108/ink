@@ -1,0 +1,3 @@
+packages/
+.ember-patch/
+.DS_Store

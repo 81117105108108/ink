@@ -1,0 +1,16 @@
+[package]
+name = "teamfireworks/ink"
+version = "0.1.0"
+description = "An immediate-mode UI library for Roblox with zero hierachies"
+authors = ["rniraclefire"]
+license = "MIT"
+
+[target]
+environment = "roblox"
+main = "src/init.luau"
+
+[tools]
+luau-lsp = "johnnymorganz/luau-lsp@1.70.1"
+stylua = "johnnymorganz/stylua@2.6.0"
+rojo = "rojo-rbx/rojo@7.7.1"
+asphalt = "jacktabscode/asphalt@2.0.2"
