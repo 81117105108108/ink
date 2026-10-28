@@ -29,7 +29,7 @@ return {
 		local shadow = ink.solid(content.bounds)
 		shadow = ink.round(shadow, 8)
 
-		local hotspot, hot = ink.hotspot(scope:key("hitbox"), bg.bounds)
+		local hot, spot = ink.hotspot(scope:key("hitbox"), bg.bounds)
 
 		local colors = BUTTON_COLORS[hot.state]
 		local color_bg = ink.tween(scope:key("color_bg"), colors.bg, 0.2)
@@ -52,7 +52,7 @@ return {
 		local button = ink.compose({
 			shadow,
 			surface,
-			hotspot,
+			spot,
 		}, shadow.bounds)
 
 		const viewport_size = props.target.AbsoluteSize

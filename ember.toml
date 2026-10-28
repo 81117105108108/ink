@@ -1,8 +1,10 @@
 [package]
 name = "teamfireworks/ink"
-version = "0.1.0"
-description = "An immediate-mode UI library for Roblox with zero hierachies"
+version = "0.1.0-rc.1"
+description = "Zero-Hierarchy Immediate-Mode UI for Roblox"
 authors = ["rniraclefire"]
+logo = ".github/assets/brand/logo.png"
+repository = "rniraclefire/ink"
 license = "MIT"
 
 [target]

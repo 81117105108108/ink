@@ -19,14 +19,14 @@ const function new_hotspot(): types.Hotspot
 	}
 end
 
-const function hotspot(s: types.Scope, bounds: Rect, options: types.HotspotOptions?): (types.Composite, types.Hotspot)
+const function hotspot(s: types.Scope, bounds: Rect, options: types.HotspotOptions?): (types.Hotspot, types.Composite)
 	const hotspot = s:once(new_hotspot)
 	const primitive: types.Primitive = {
 		bounds = bounds,
 		hotspot = hotspot,
 		hotspot_wheel = options ~= nil and options.wheel == true,
 	}
-	return { primitives = { primitive }, bounds = bounds }, hotspot
+	return hotspot, { primitives = { primitive }, bounds = bounds }
 end
 
 return hotspot
