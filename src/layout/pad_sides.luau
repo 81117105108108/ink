@@ -1,9 +1,9 @@
-local rects = require("../composites/rects")
+local inset_rect_sides = require("../rects/inset_rect_sides")
 local types = require("../types")
 
 const function pad_sides(c: types.Composite, top: number?, left: number?, bottom: number?, right: number?)
 	const out = table.clone(c)
-	out.bounds = rects.inset_sides(c.bounds, -(top or 0), -(left or 0), -(bottom or 0), -(right or 0))
+	out.bounds = inset_rect_sides(c.bounds, -(top or 0), -(left or 0), -(bottom or 0), -(right or 0))
 	return out
 end
 

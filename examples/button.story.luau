@@ -17,8 +17,8 @@ return {
 	},
 	render = ink.story(function(scope, props)
 		local content = {
-			ink.image(ink.rects.from_size(24, 24), "rbxassetid://8517323790"),
-			ink.align(ink.text(props.controls.label, BUTTON_STYLE), ink.rects.from_size(0, 24), nil, 0.5),
+			ink.image(ink.rect_sized(24, 24), "rbxassetid://8517323790"),
+			ink.align(ink.text(props.controls.label, BUTTON_STYLE), ink.rect_sized(0, 24), nil, 0.5),
 		}
 		content = ink.h_stack(content, 8)
 		content = ink.pad_xy(content, 16, 12)
@@ -29,7 +29,7 @@ return {
 		local shadow = ink.solid(content.bounds)
 		shadow = ink.round(shadow, 8)
 
-		local hit, hit_state, hit_activated = ink.hit_region(scope:key("hitbox"), bg.bounds)
+		local hit, hit_state, hit_activated = ink.hit(scope:key("hitbox"), bg.bounds)
 
 		local button_colors = BUTTON_COLORS[hit_state]
 		content = ink.tint(content, button_colors.fg)
@@ -54,7 +54,7 @@ return {
 		}, shadow.bounds)
 
 		const viewport_size = props.target.AbsoluteSize
-		button = ink.align(button, ink.rects.from_xywh(0, 0, viewport_size.X, viewport_size.Y), 0.5, 0.5)
+		button = ink.align(button, ink.rect(0, 0, viewport_size.X, viewport_size.Y), 0.5, 0.5)
 
 		return button
 	end),

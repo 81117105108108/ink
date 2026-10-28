@@ -37,10 +37,10 @@ const CARDS = {
 }
 
 const function render_card(card: Card)
-	local bg = ink.solid(ink.rects.from_size(320, 180))
+	local bg = ink.solid(ink.rect_sized(320, 180))
 	bg = ink.tint(bg, COLOR_TEXT_BG, 2 / 3)
 
-	local logo = ink.image(ink.rects.from_size(160, 160), card.logo)
+	local logo = ink.image(ink.rect_sized(160, 160), card.logo)
 	logo = ink.pad_all(logo, -32)
 	logo = ink.align(logo, bg.bounds, 1, 1)
 
@@ -65,6 +65,6 @@ return {
 
 		const viewport_size = props.target.AbsoluteSize
 
-		return ink.align(c, ink.rects.from_size(viewport_size.X, viewport_size.Y), 0.5, 0.5)
+		return ink.align(c, ink.rect_sized(viewport_size.X, viewport_size.Y), 0.5, 0.5)
 	end),
 }

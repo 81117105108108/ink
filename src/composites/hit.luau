@@ -5,7 +5,7 @@ const function new_state(): types.HitState
 	return { state = Enum.GuiState.Idle, activated = false }
 end
 
-const function hit_region(s: scope.Scope, bounds: Rect): (types.Composite, Enum.GuiState, boolean)
+const function hit(s: scope.Scope, bounds: Rect): (types.Composite, Enum.GuiState, boolean)
 	const hit = s:once(new_state)
 
 	const clicked = hit.activated
@@ -19,4 +19,4 @@ const function hit_region(s: scope.Scope, bounds: Rect): (types.Composite, Enum.
 	return c, hit.state, clicked
 end
 
-return hit_region
+return hit

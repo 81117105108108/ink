@@ -17,7 +17,7 @@ return {
 			for y = 1, CELL_COUNT do
 				const offset = (x * y) / CELL_COUNT ^ 2
 				const cell_elapsed = elapsed + offset
-				local frame = ink.solid(ink.rects.from_size(6, 6))
+				local frame = ink.solid(ink.rect_sized(6, 6))
 				frame = ink.tint(frame, COLOR_START:Lerp(COLOR_END, (cell_elapsed * CYCLES_PER_SECOND) % 1))
 				frame = ink.rotate(frame, (cell_elapsed * 360) * CYCLES_PER_SECOND)
 				column[y] = frame

@@ -14,7 +14,7 @@ return table.freeze({
 	solid = require("@self/composites/solid"),
 	text = require("@self/composites/text"),
 	image = require("@self/composites/image"),
-	hit_region = require("@self/composites/hit_region"),
+	hit = require("@self/composites/hit"),
 
 	align = require("@self/layout/align"),
 	h_stack = require("@self/layout/h_stack"),
@@ -28,7 +28,14 @@ return table.freeze({
 	tint = require("@self/styling/tint"),
 	round = require("@self/styling/round"),
 
-	rects = require("@self/composites/rects"),
+	inset_rect = require("@self/rects/inset_rect"),
+	inset_rect_sides = require("@self/rects/inset_rect_sides"),
+	inset_rect_xy = require("@self/rects/inset_rect_xy"),
+	intersect_rects = require("@self/rects/intersect_rects"),
+	is_equal_rects = require("@self/rects/is_equal_rects"),
+	rect = require("@self/rects/rect"),
+	rect_sized = require("@self/rects/rect_sized"),
+	union_rects = require("@self/rects/union_rects"),
 
 	scope = require("@self/runtime/scope"),
 	renderer = require("@self/runtime/roblox_frontend"),
