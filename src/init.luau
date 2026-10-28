@@ -54,6 +54,7 @@ return table.freeze({
 	-- Runtime
 	scope = require("@self/runtime/scope"),
 	expensive = require("@self/runtime/expensive"),
+	update_intent_state = require("@self/runtime/update_intent_state"),
 	roblox_renderer = require("@self/runtime/roblox_renderer"),
 	roblox_intent = require("@self/runtime/roblox_intent"),
 	roblox_story = require("@self/runtime/roblox_story"),
