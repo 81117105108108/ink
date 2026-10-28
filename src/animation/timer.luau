@@ -1,4 +1,4 @@
-local scope = require("./scope")
+local scope = require("../runtime/scope")
 
 const function timer(s: scope.Scope)
 	const elapsed = s:get(0) + s:dt()

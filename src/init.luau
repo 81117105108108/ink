@@ -46,9 +46,13 @@ return table.freeze({
 	tint = require("@self/styling/tint"),
 	round = require("@self/styling/round"),
 
+	-- Animation
+	oklab = require("@self/animation/timer"),
+	timer = require("@self/animation/timer"),
+	tween = require("@self/animation/tween"),
+
 	-- Runtime
 	scope = require("@self/runtime/scope"),
-	timer = require("@self/runtime/timer"),
 	roblox_renderer = require("@self/runtime/roblox_renderer"),
 	roblox_intent = require("@self/runtime/roblox_intent"),
 	roblox_story = require("@self/runtime/roblox_story"),

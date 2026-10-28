@@ -31,10 +31,12 @@ return {
 
 		local hotspot, hot = ink.hotspot(scope:key("hitbox"), bg.bounds)
 
-		local button_colors = BUTTON_COLORS[hot.state]
-		content = ink.tint(content, button_colors.fg)
-		bg = ink.tint(bg, button_colors.bg)
-		shadow = ink.tint(shadow, button_colors.fg)
+		local colors = BUTTON_COLORS[hot.state]
+		local color_bg = ink.tween(scope:key("color_bg"), colors.bg, 0.2)
+		local color_fg = ink.tween(scope:key("color_fg"), colors.fg, 0.2)
+		bg = ink.tint(bg, color_bg)
+		content = ink.tint(content, color_fg)
+		shadow = ink.tint(shadow, color_fg)
 
 		local surface = ink.compose({ bg, content })
 		shadow = ink.translate(shadow, 0, hot.state == Enum.GuiState.Press and 4 or 6)
