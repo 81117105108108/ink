@@ -15,7 +15,7 @@ return {
 	controls = {
 		label = "Continue Game",
 	},
-	render = ink.story(function(scope, props)
+	render = ink.roblox_story(function(scope, props)
 		local content = {
 			ink.image(ink.rect_sized(24, 24), "rbxassetid://8517323790"),
 			ink.align(ink.text(props.controls.label, BUTTON_STYLE), ink.rect_sized(0, 24), nil, 0.5),
@@ -29,19 +29,19 @@ return {
 		local shadow = ink.solid(content.bounds)
 		shadow = ink.round(shadow, 8)
 
-		local hit, hit_state, hit_activated = ink.hit(scope:key("hitbox"), bg.bounds)
+		local hotspot, hot = ink.hotspot(scope:key("hitbox"), bg.bounds)
 
-		local button_colors = BUTTON_COLORS[hit_state]
+		local button_colors = BUTTON_COLORS[hot.state]
 		content = ink.tint(content, button_colors.fg)
 		bg = ink.tint(bg, button_colors.bg)
 		shadow = ink.tint(shadow, button_colors.fg)
 
 		local surface = ink.compose({ bg, content })
-		shadow = ink.translate(shadow, 0, hit_state == Enum.GuiState.Press and 4 or 6)
+		shadow = ink.translate(shadow, 0, hot.state == Enum.GuiState.Press and 4 or 6)
 
 		const count_scope = scope:key("count")
 		local count = count_scope:get(0)
-		if hit_activated then
+		if hot.clicked then
 			count += 1
 			print(`{count}x presses`)
 		end
@@ -50,7 +50,7 @@ return {
 		local button = ink.compose({
 			shadow,
 			surface,
-			hit,
+			hotspot,
 		}, shadow.bounds)
 
 		const viewport_size = props.target.AbsoluteSize

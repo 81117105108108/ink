@@ -1,10 +1,10 @@
-type Clock = { frame: number, dt: number, time: number }
+type Shared = { frame: number, dt: number, time: number }
 
 const scope = {}
 scope.__index = scope
 
 export type Scope = setmetatable<{
-	clock: Clock,
+	shared: Shared,
 	flipped_on: number,
 	previous: { [string]: any },
 	current: { [string]: any },
@@ -13,9 +13,9 @@ export type Scope = setmetatable<{
 	pending_frame: number?,
 }, typeof(scope)>
 
-const function new_scope(clock: Clock): Scope
+const function new_scope(shared: Shared): Scope
 	return setmetatable({
-		clock = clock,
+		shared = shared,
 		flipped_on = -1,
 		previous = {},
 		current = {},
@@ -30,7 +30,7 @@ function scope.new(): Scope
 end
 
 function scope.next(self: Scope, dt: number)
-	const clock = self.clock
+	const clock = self.shared
 	clock.frame += 1
 	clock.dt = dt
 	clock.time += dt
@@ -51,7 +51,7 @@ function scope.key(self: Scope, name: string): Scope
 	flip(self)
 	local child = self.current[name]
 	if child == nil then
-		child = self.previous[name] or new_scope(self.clock)
+		child = self.previous[name] or new_scope(self.shared)
 		self.current[name] = child
 	end
 	return child
@@ -79,15 +79,15 @@ function scope.get<T>(self: Scope, default: T): T
 end
 
 function scope.frame(self: Scope): number
-	return self.clock.frame
+	return self.shared.frame
 end
 
 function scope.dt(self: Scope): number
-	return self.clock.dt
+	return self.shared.dt
 end
 
 function scope.time(self: Scope): number
-	return self.clock.time
+	return self.shared.time
 end
 
 return table.freeze(scope)

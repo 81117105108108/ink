@@ -2,7 +2,10 @@ const types = require("@self/types")
 
 export type Primitive = types.Primitive
 export type Composite = types.Composite
-export type RoundStyle = types.RoundStyle
+export type RoundStyle = types.Intent
+export type IntentState = types.IntentState
+export type Hotspot = types.Hotspot
+export type HotspotOptions = types.HotspotOptions
 export type TextStyle = types.TextStyle
 export type ImageStyle = types.ImageStyle
 export type Scope = types.Scope
@@ -16,6 +19,7 @@ return table.freeze({
 	inset_rect_xy = require("@self/rects/inset_rect_xy"),
 	intersect_rects = require("@self/rects/intersect_rects"),
 	is_equal_rects = require("@self/rects/is_equal_rects"),
+	is_in_rect = require("@self/rects/is_in_rect"),
 	rect = require("@self/rects/rect"),
 	rect_sized = require("@self/rects/rect_sized"),
 	union_rects = require("@self/rects/union_rects"),
@@ -25,7 +29,7 @@ return table.freeze({
 	solid = require("@self/composites/solid"),
 	text = require("@self/composites/text"),
 	image = require("@self/composites/image"),
-	hit = require("@self/composites/hit"),
+	hotspot = require("@self/composites/hotspot"),
 
 	-- Layouts
 	align = require("@self/layout/align"),
@@ -44,7 +48,8 @@ return table.freeze({
 
 	-- Runtime
 	scope = require("@self/runtime/scope"),
-	renderer = require("@self/runtime/roblox_frontend"),
-	story = require("@self/runtime/story"),
 	timer = require("@self/runtime/timer"),
+	roblox_renderer = require("@self/runtime/roblox_renderer"),
+	roblox_intent = require("@self/runtime/roblox_intent"),
+	roblox_story = require("@self/runtime/roblox_story"),
 })

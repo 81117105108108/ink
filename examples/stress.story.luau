@@ -8,7 +8,7 @@ const COLOR_START = Color3.new(1, 0, 0)
 const COLOR_END = Color3.new(0, 0, 1)
 
 return {
-	render = ink.story(function(scope, props)
+	render = ink.roblox_story(function(scope, props)
 		const elapsed = ink.timer(scope:key("timer"))
 
 		local rows = table.create<<ink.Composite>>(CELL_COUNT)

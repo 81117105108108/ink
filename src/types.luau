@@ -1,5 +1,34 @@
 local scope = require("./runtime/scope")
 
+export type Intent = {
+	pointer: Vector2,
+	pointer_delta: Vector2,
+	down: boolean,
+	pressed: boolean,
+	released: boolean,
+	wheel: number,
+	keys_held: { [Enum.KeyCode]: boolean },
+	keys_pressed: { [Enum.KeyCode]: boolean },
+}
+
+export type IntentState = {
+	hotspots: { Primitive },
+	active: Hotspot?,
+}
+
+export type Hotspot = {
+	state: Enum.GuiState,
+	clicked: boolean,
+	wheel: number,
+	drag: Vector2,
+	pointer: Vector2,
+	bounds: Rect,
+}
+
+export type HotspotOptions = {
+	wheel: boolean?,
+}
+
 export type RoundStyle = {
 	tl: number?,
 	tr: number?,
@@ -16,11 +45,6 @@ export type ImageStyle = {
 	idk_bro: never,
 }
 
-export type HitState = {
-	state: Enum.GuiState,
-	activated: boolean,
-}
-
 export type Primitive = {
 	bounds: Rect,
 	clip: Rect?,
@@ -34,7 +58,8 @@ export type Primitive = {
 	text_style: TextStyle?,
 	image: string?,
 	image_style: ImageStyle?,
-	hit_state: HitState?,
+	hotspot: Hotspot?,
+	hotspot_wheel: boolean?,
 }
 
 export type Composite = {

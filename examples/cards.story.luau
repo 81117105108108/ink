@@ -56,7 +56,7 @@ const function render_card(card: Card)
 end
 
 return {
-	render = ink.story(function(scope, props)
+	render = ink.roblox_story(function(scope, props)
 		local c = {}
 		for index, card in CARDS do
 			c[index] = ink.translate(render_card(card), (index - 1) * 32)
