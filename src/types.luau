@@ -23,6 +23,7 @@ export type HitState = {
 
 export type Primitive = {
 	bounds: Rect,
+	clip: Rect?,
 
 	color: Color3?,
 	transparency: number?,

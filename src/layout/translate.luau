@@ -1,16 +1,17 @@
 const types = require("../types")
 
-const function translate(c: types.Composite, x: number?, y: number?): types.Composite
+const function translate(composite: types.Composite, x: number?, y: number?): types.Composite
 	const offset = Vector2.new(x, y)
-	const primitives = table.create<<primitives.Primitive>>(#c.primitives)
-	for _, primitive in c.primitives do
-		const q = table.clone(primitive)
-		q.bounds = Rect.new(q.bounds.Min + offset, q.bounds.Max + offset)
-		table.insert(primitives, q)
+	const out_primitives = table.create<<primitives.Primitive>>(#composite.primitives)
+	for _, primitive in composite.primitives do
+		primitive = table.clone(primitive)
+		primitive.bounds = Rect.new(primitive.bounds.Min + offset, primitive.bounds.Max + offset)
+		primitive.clip = primitive.clip and Rect.new(primitive.clip.Min + offset, primitive.clip.Max + offset)
+		table.insert(out_primitives, primitive)
 	end
 	return {
-		primitives = primitives,
-		bounds = Rect.new(c.bounds.Min + offset, c.bounds.Max + offset),
+		primitives = out_primitives,
+		bounds = Rect.new(composite.bounds.Min + offset, composite.bounds.Max + offset),
 	}
 end
 
