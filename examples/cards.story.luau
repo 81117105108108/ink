@@ -37,12 +37,12 @@ const CARDS = {
 }
 
 const function render_card(card: Card)
-	local top = ink.solid(ink.rects.from_size(320, 180), COLOR_TEXT_BG)
-	top = ink.transparency(top, 2 / 3)
+	local bg = ink.solid(ink.rects.from_size(320, 180), COLOR_TEXT_BG)
+	bg = ink.transparency(bg, 2 / 3)
 
 	local logo = ink.image(ink.rects.from_size(160, 160), card.logo)
 	logo = ink.pad(logo, -32)
-	logo = ink.align(logo, top.bounds, 1, 1)
+	logo = ink.align(logo, bg.bounds, 1, 1)
 
 	local fg = ink.vstack({
 		ink.text(card.title, TITLE_STYLE),
@@ -52,7 +52,7 @@ const function render_card(card: Card)
 	fg = ink.pad(fg, 12)
 	fg = ink.compose({ ink.solid(fg.bounds, COLOR_TEXT_BG), fg })
 
-	return ink.compose({ top, logo, fg })
+	return ink.compose({ bg, logo, fg }, bg.bounds)
 end
 
 return {
@@ -61,7 +61,7 @@ return {
 		for index, card in CARDS do
 			c[index] = ink.translate(render_card(card), Vector2.new((index - 1) * 32))
 		end
-		c = ink.vstack(c, 32)
+		c = ink.vstack(c, 42)
 
 		const viewport_size = props.target.AbsoluteSize
 

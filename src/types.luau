@@ -1,3 +1,5 @@
+local scope = require("./runtime/scope")
+
 export type RoundStyle = {
 	tl: UDim,
 	tr: UDim,
@@ -14,10 +16,15 @@ export type ImageStyle = {
 	idk_bro: never,
 }
 
+export type HitState = {
+	state: Enum.GuiState,
+	activated: boolean,
+}
+
 export type Primitive = {
 	bounds: Rect,
 
-	color: Color3,
+	color: Color3?,
 	transparency: number?,
 	round: RoundStyle?,
 	rotation: number?,
@@ -26,11 +33,15 @@ export type Primitive = {
 	text_style: TextStyle?,
 	image: string?,
 	image_style: ImageStyle?,
+	hit_state: HitState?,
 }
 
 export type Composite = {
 	primitives: { Primitive },
 	bounds: Rect,
+	hitbox_scope: scope.Scope?,
 }
+
+export type Scope = scope.Scope
 
 return nil
