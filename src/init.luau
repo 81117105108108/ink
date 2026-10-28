@@ -11,7 +11,7 @@ export type ImageStyle = types.ImageStyle
 export type Scope = types.Scope
 
 return table.freeze({
-	version = "0.1.0-alpha.1",
+	version = "0.1.0-rc.2",
 
 	-- Rects
 	inset_rect = require("@self/rects/inset_rect"),
