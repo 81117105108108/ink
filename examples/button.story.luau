@@ -37,20 +37,21 @@ return {
 		shadow = ink.tint(shadow, button_colors.fg)
 
 		local surface = ink.compose({ bg, content })
-		surface = ink.translate(surface, 0, hit_state == Enum.GuiState.Press and -4 or -6)
+		shadow = ink.translate(shadow, 0, hit_state == Enum.GuiState.Press and 4 or 6)
 
 		const count_scope = scope:key("count")
+		local count = count_scope:get(0)
 		if hit_activated then
-			const count = count_scope:get(0) + 1
-			count_scope:set(count)
+			count += 1
 			print(`{count}x presses`)
 		end
+		count_scope:set(count)
 
 		local button = ink.compose({
 			shadow,
 			surface,
 			hit,
-		}, content.bounds)
+		}, shadow.bounds)
 
 		const viewport_size = props.target.AbsoluteSize
 		button = ink.align(button, ink.rects.from_xywh(0, 0, viewport_size.X, viewport_size.Y), 0.5, 0.5)

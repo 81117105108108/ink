@@ -3,38 +3,41 @@ type Clock = { frame: number, dt: number, time: number }
 const scope = {}
 scope.__index = scope
 
-export type Scope = setmetatable<
-	{
-		-- frame, dt, time
-		clock: vector,
-		flipped_on: number,
-		previous: { [string]: any },
-		current: { [string]: any },
-		value: unknown,
-	},
-	typeof(scope)
->
+export type Scope = setmetatable<{
+	clock: Clock,
+	flipped_on: number,
+	previous: { [string]: any },
+	current: { [string]: any },
+	value: unknown,
+	pending: unknown,
+	pending_frame: number?,
+}, typeof(scope)>
 
-const function new_scope(clock: vector): Scope
+const function new_scope(clock: Clock): Scope
 	return setmetatable({
 		clock = clock,
 		flipped_on = -1,
 		previous = {},
 		current = {},
 		value = nil,
+		pending = nil,
+		pending_frame = nil,
 	}, scope)
 end
 
 function scope.new(): Scope
-	return new_scope(vector.zero)
+	return new_scope({ frame = 0, dt = 0, time = 0 })
 end
 
 function scope.next(self: Scope, dt: number)
-	self.clock = vector.create(1, dt, self.clock.z + dt)
+	const clock = self.clock
+	clock.frame += 1
+	clock.dt = dt
+	clock.time += dt
 end
 
 const function flip(self: Scope)
-	const frame = self.clock.x
+	const frame = self:frame()
 	if self.flipped_on ~= frame then
 		self.flipped_on = frame
 		const old = self.previous
@@ -61,28 +64,30 @@ function scope.once<T>(self: Scope, init: () -> T): T
 	return self.value :: T
 end
 
-function scope.get<T>(self: Scope, default: T): T
-	const value = self.value
-	if value == nil then
-		return default
-	end
-	return value :: T
+function scope.set<T>(self: Scope, value: T)
+	self.pending = value
+	self.pending_frame = self:frame()
 end
 
-function scope.set<T>(self: Scope, value: T)
-	self.value = value
+function scope.get<T>(self: Scope, default: T): T
+	if self.pending_frame and self.pending_frame < self:frame() then
+		self.value = self.pending
+		self.pending, self.pending_frame = nil, nil
+	end
+	const value = self.value
+	return if value == nil then default else value :: T
 end
 
 function scope.frame(self: Scope): number
-	return self.clock.x
+	return self.clock.frame
 end
 
 function scope.dt(self: Scope): number
-	return self.clock.y
+	return self.clock.dt
 end
 
 function scope.time(self: Scope): number
-	return self.clock.z
+	return self.clock.time
 end
 
 return table.freeze(scope)

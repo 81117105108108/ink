@@ -103,6 +103,8 @@ function roblox_frontend.render_composite(self: Renderer, composite: types.Compo
 			const instance = pool.instances[i]
 			if instance:IsA("GuiObject") then
 				instance.Visible = false
+			else
+				instance.Parent = nil
 			end
 		end
 	end
