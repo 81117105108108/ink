@@ -8,7 +8,7 @@ const function align(composite: types.Composite, container: Rect, ax: number?, a
 	if dx == 0 and dy == 0 then
 		return composite
 	end
-	return translate(composite, Vector2.new(dx, dy))
+	return translate(composite, dx, dy)
 end
 
 return align

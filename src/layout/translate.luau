@@ -1,7 +1,7 @@
 const types = require("../types")
 
-const function translate(c: types.Composite, offset: Vector2?): types.Composite
-	offset = offset or Vector2.zero
+const function translate(c: types.Composite, x: number?, y: number?): types.Composite
+	const offset = Vector2.new(x, y)
 	const primitives = table.create<<primitives.Primitive>>(#c.primitives)
 	for _, primitive in c.primitives do
 		const q = table.clone(primitive)

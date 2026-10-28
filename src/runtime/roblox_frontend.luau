@@ -35,6 +35,8 @@ function roblox_frontend.acquire<T>(self: Renderer, class_name: string): (T, boo
 end
 
 function roblox_frontend.render_composite(self: Renderer, composite: types.Composite)
+	debug.profilebegin("Ink Render")
+
 	for _, pool in self.pools do
 		pool.used = 0
 	end
@@ -88,10 +90,10 @@ function roblox_frontend.render_composite(self: Renderer, composite: types.Compo
 
 		if primitive.round then
 			const corner = self:acquire("UICorner") :: UICorner
-			corner.TopLeftRadius = primitive.round.tl
-			corner.TopRightRadius = primitive.round.tr
-			corner.BottomLeftRadius = primitive.round.bl
-			corner.BottomRightRadius = primitive.round.br
+			corner.TopLeftRadius = UDim.new(0, primitive.round.tl)
+			corner.TopRightRadius = UDim.new(0, primitive.round.tr)
+			corner.BottomLeftRadius = UDim.new(0, primitive.round.bl)
+			corner.BottomRightRadius = UDim.new(0, primitive.round.br)
 			corner.Parent = instance
 		end
 	end
@@ -104,6 +106,8 @@ function roblox_frontend.render_composite(self: Renderer, composite: types.Compo
 			end
 		end
 	end
+
+	debug.profileend()
 end
 
 function roblox_frontend.destroy(self: Renderer)

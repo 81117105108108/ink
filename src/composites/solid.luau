@@ -1,8 +1,8 @@
 local types = require("../types")
 
-const function solid(bounds: Rect, color: Color3?, transparency: number?): types.Composite
+const function solid(bounds: Rect): types.Composite
 	return {
-		primitives = { { bounds = bounds, color = color, transparency = transparency } },
+		primitives = { { bounds = bounds } },
 		bounds = bounds,
 	}
 end

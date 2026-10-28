@@ -1,10 +1,10 @@
 local scope = require("./runtime/scope")
 
 export type RoundStyle = {
-	tl: UDim,
-	tr: UDim,
-	bl: UDim,
-	br: UDim,
+	tl: number?,
+	tr: number?,
+	bl: number?,
+	br: number?,
 }
 
 export type TextStyle = {

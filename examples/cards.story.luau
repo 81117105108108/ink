@@ -37,19 +37,19 @@ const CARDS = {
 }
 
 const function render_card(card: Card)
-	local bg = ink.solid(ink.rects.from_size(320, 180), COLOR_TEXT_BG)
-	bg = ink.transparency(bg, 2 / 3)
+	local bg = ink.solid(ink.rects.from_size(320, 180))
+	bg = ink.tint(bg, COLOR_TEXT_BG, 2 / 3)
 
 	local logo = ink.image(ink.rects.from_size(160, 160), card.logo)
-	logo = ink.pad(logo, -32)
+	logo = ink.pad_all(logo, -32)
 	logo = ink.align(logo, bg.bounds, 1, 1)
 
-	local fg = ink.vstack({
+	local fg = ink.v_stack({
 		ink.text(card.title, TITLE_STYLE),
 		ink.text(card.body, BODY_STYLE),
 	})
-	fg = ink.recolor(fg, COLOR_TEXT_FG)
-	fg = ink.pad(fg, 12)
+	fg = ink.tint(fg, COLOR_TEXT_FG)
+	fg = ink.pad_all(fg, 12)
 	fg = ink.compose({ ink.solid(fg.bounds, COLOR_TEXT_BG), fg })
 
 	return ink.compose({ bg, logo, fg }, bg.bounds)
@@ -59,9 +59,9 @@ return {
 	render = ink.story(function(scope, props)
 		local c = {}
 		for index, card in CARDS do
-			c[index] = ink.translate(render_card(card), Vector2.new((index - 1) * 32))
+			c[index] = ink.translate(render_card(card), (index - 1) * 32)
 		end
-		c = ink.vstack(c, 42)
+		c = ink.v_stack(c, 42)
 
 		const viewport_size = props.target.AbsoluteSize
 

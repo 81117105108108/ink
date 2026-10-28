@@ -9,8 +9,6 @@ const function text(content: string, style: types.TextStyle, max_width: number?)
 
 	const primitive: types.Primitive = {
 		bounds = bounds,
-		color = Color3.new(1, 1, 1),
-		transparency = 0,
 		text = content,
 		text_style = style,
 	}

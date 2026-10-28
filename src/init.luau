@@ -11,22 +11,24 @@ return table.freeze({
 	version = "0.1.0-alpha.1",
 
 	compose = require("@self/composites/compose"),
-	hitbox = require("@self/composites/hitbox"),
-	rects = require("@self/composites/rects"),
 	solid = require("@self/composites/solid"),
 	text = require("@self/composites/text"),
 	image = require("@self/composites/image"),
-	recolor = require("@self/composites/recolor"),
-	transparency = require("@self/composites/transparency"),
-	round = require("@self/composites/round"),
+	hit_region = require("@self/composites/hit_region"),
 
 	align = require("@self/layout/align"),
-	hstack = require("@self/layout/hstack"),
-	pad = require("@self/layout/pad"),
+	h_stack = require("@self/layout/h_stack"),
+	pad_all = require("@self/layout/pad_all"),
 	pad_sides = require("@self/layout/pad_sides"),
 	pad_xy = require("@self/layout/pad_xy"),
 	translate = require("@self/layout/translate"),
-	vstack = require("@self/layout/vstack"),
+	v_stack = require("@self/layout/v_stack"),
+
+	rotate = require("@self/styling/rotate"),
+	tint = require("@self/styling/tint"),
+	round = require("@self/styling/round"),
+
+	rects = require("@self/composites/rects"),
 
 	scope = require("@self/runtime/scope"),
 	renderer = require("@self/runtime/roblox_frontend"),
