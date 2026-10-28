@@ -1,6 +1,7 @@
 <div align="center">
-    <img src="./.github/assets/brand/wordmark.png" height="150" />
+    <img src="./.github/assets/brand/wordmark.png" height="200" />
     <h3>Zero-Hierarchy Immediate-Mode UI for Roblox</h3>
+    <img src="./.github/assets/example.png" />
 </div>
 
 ## About
@@ -17,7 +18,7 @@ every frame, with plain low-level `Rect` primitives.
 > Ink is in early alpha. Ink's API will change between releases.
 
 ## Installation
-
+ 
 ```sh
 embr add teamfireworks/ink
 ```
