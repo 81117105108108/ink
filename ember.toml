@@ -3,7 +3,7 @@ name = "teamfireworks/ink"
 version = "0.1.0-rc.1"
 description = "Zero-Hierarchy Immediate-Mode UI for Roblox"
 authors = ["rniraclefire"]
-logo = ".github/assets/brand/logo.png"
+logo = ".github/assets/brand/icon.png"
 repository = "rniraclefire/ink"
 license = "MIT"
 
