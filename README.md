@@ -62,8 +62,8 @@ const function button(scope: ink.Scope, label: string, on_activated: () -> ())
     local bg = ink.solid(label.bounds)
     bg = ink.round(bg, 4)
 
-    -- A hotspot is an invisible region that reports what the pointer is doing
-    -- to it.
+    -- Hotspots are an invisible region that detects what the pointer is doing
+    -- to it, such as clicking and hovering.
     --
     -- `scope:key` here defines an inner value, which the hotspot will use to
     -- store itself. You'll see this pattern a lot!
@@ -96,25 +96,26 @@ const function button(scope: ink.Scope, label: string, on_activated: () -> ())
 end
 
 -- Let's try rendering some layouts.
+--
 -- Now, usually on other libraries, you'll have to make some UIListLayouts,
--- maybe throw in a `use_next_order()` here and there.
+-- or, maybe throw in a `use_next_order()` here, and there.
 --
 -- Ink might suprise you.
 
-const function render_ui(scope: Scope)
+const function ui(scope: Scope)
     -- Layout functions often take an array of composites. Let's create some.
     const buttons = {}
     for index, action in { "Like", "Subscribe", "Notifications" } do
-        local button = render_button(scope, label, function()
+        local btn = button(scope, label, function()
             print(action, "pressed")
         end)
 
         -- Ooh! Let's stagger them, for fun!
         local multiplier = index - 1
         local margin = multiplier * 24
-        button = ink.translate(button, margin, 0)
+        btn = ink.translate(btn, margin, 0)
 
-        buttons[index] = button
+        buttons[index] = btn
     end
 
     const list = ink.v_stack(buttons, 8)
