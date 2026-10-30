@@ -21,7 +21,13 @@ export type TextStyle = {
 }
 
 export type ImageStyle = {
-	idk_bro: never,
+	scale_type: Enum.ScaleType?,
+	slice_center: Rect?,
+	slice_scale: number?,
+	rect_offset: Vector2?,
+	rect_size: Vector2?,
+	resample: Enum.ResamplerMode?,
+	tile_size: UDim2?,
 }
 
 -- Composites

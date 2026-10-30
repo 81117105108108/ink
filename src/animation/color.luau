@@ -13,6 +13,7 @@ local function cbrt(x: number)
 	return math.sign(x) * math.abs(x) ^ (1 / 3)
 end
 
+--- Oklab and Oklch implementation, alongside Color3 extension methods.
 local color = {
 	WHITE = Color3.new(1, 1, 1),
 	BLACK = Color3.new(0, 0, 0),

@@ -1,6 +1,7 @@
-local union_rects = require("../rects/union_rects")
 local types = require("../types")
+local union_rects = require("../rects/union_rects")
 
+--- Combines composites into one, rendered first to last.
 const function compose(composed_of: { types.Composite }, bounded_by: Rect?): types.Composite
 	local out_primitives: { types.Primitive } = {}
 	local out_bounds: Rect?

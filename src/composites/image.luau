@@ -1,8 +1,9 @@
 local types = require("../types")
 
-const function image(bounds: Rect, content: string): types.Composite
+--- Creates a composite containing an image.
+const function image(bounds: Rect, content: string, style: types.ImageStyle?): types.Composite
 	return {
-		primitives = { { bounds = bounds, image = content } },
+		primitives = { { bounds = bounds, image = content, image_style = style } },
 		bounds = bounds,
 	}
 end

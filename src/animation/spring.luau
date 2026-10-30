@@ -1,11 +1,11 @@
 const pack_types = require("./datatypes/pack_types")
-const unpack_types = require("./datatypes/unpack_types")
 const spring_coefficients = require("./spring_coefficients")
 const types = require("../types")
+const unpack_types = require("./datatypes/unpack_types")
 
-type SpringState = {
+type State<T> = {
 	kind: string?,
-	target: any,
+	target: T,
 	goal: { number },
 	position: { number },
 	velocity: { number },
@@ -14,12 +14,12 @@ type SpringState = {
 
 const EPSILON = 1e-4
 
-const function new_state(): SpringState
+const function new_state<T>(): State<T>
 	return { kind = nil, target = nil, goal = {}, position = {}, velocity = {}, resting = true }
 end
 
 const function spring<T>(s: types.Scope, target: T, speed: number?, damping: number?): T
-	const state = s:once(new_state)
+	const state = s:once(new_state<<T>>)
 	const kind = typeof(target)
 	const pack, unpack = pack_types[kind], unpack_types[kind]
 	assert(pack and unpack, `Cannot spring a {kind}`)

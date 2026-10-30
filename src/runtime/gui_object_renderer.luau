@@ -1,23 +1,20 @@
+local color = require("../animation/color")
 local is_equal_rects = require("../rects/is_equal_rects")
 local types = require("../types")
 
-const roblox_frontend = {}
-roblox_frontend.__index = roblox_frontend
+const gui_object_renderer = {}
+gui_object_renderer.__index = gui_object_renderer
 
 export type Renderer = setmetatable<{
 	pools: { [string]: { instances: { Instance }, used: number } },
 	root: Instance,
-}, typeof(roblox_frontend)>
+}, typeof(gui_object_renderer)>
 
-const COLOR_WHITE = Color3.new(1, 1, 1)
-const COLOR_BLACK = Color3.new(0, 0, 0)
-const DEFAULT_TEXT_STYLE = { size = 0, font = Enum.Font.Arial }
-
-function roblox_frontend.new(root: Instance): Renderer
-	return setmetatable({ pools = {}, root = root }, roblox_frontend)
+function gui_object_renderer.new(root: Instance): Renderer
+	return setmetatable({ pools = {}, root = root }, gui_object_renderer)
 end
 
-function roblox_frontend.acquire<T>(self: Renderer, class_name: string, pool_name: string?): T
+function gui_object_renderer.acquire<T>(self: Renderer, class_name: string, pool_name: string?): T
 	const key = pool_name or class_name
 	local pool = self.pools[key]
 	if not pool then
@@ -33,7 +30,7 @@ function roblox_frontend.acquire<T>(self: Renderer, class_name: string, pool_nam
 	return instance
 end
 
-function roblox_frontend.render(self: Renderer, composite: types.Composite)
+function gui_object_renderer.render(self: Renderer, composite: types.Composite)
 	debug.profilebegin("Ink Render")
 
 	for _, pool in self.pools do
@@ -69,27 +66,34 @@ function roblox_frontend.render(self: Renderer, composite: types.Composite)
 
 		local instance
 		if primitive.text then
-			const text_style = primitive.text_style or DEFAULT_TEXT_STYLE
+			const style = primitive.text_style or {} :: types.TextStyle
 			instance = self:acquire<<TextLabel>>("TextLabel")
 			instance.BackgroundTransparency = 1
 			instance.Text = primitive.text
-			instance.TextSize = text_style.size
-			instance.TextColor3 = primitive.color or COLOR_BLACK
+			instance.TextSize = style.size or 0
+			instance.TextColor3 = primitive.color or color.BLACK
 			instance.TextTransparency = primitive.transparency or 0
-			instance.Font = text_style.font
+			instance.Font = style.font or Enum.Font.Arial
 		elseif primitive.image then
+			const style = primitive.image_style or {} :: types.ImageStyle
 			instance = self:acquire<<ImageLabel>>("ImageLabel")
 			instance.BackgroundTransparency = 1
 			instance.Image = primitive.image
-			instance.ImageColor3 = primitive.color or COLOR_WHITE
+			instance.ImageColor3 = primitive.color or color.WHITE
 			instance.ImageTransparency = primitive.transparency or 0
+			instance.ImageRectOffset = style.rect_offset or Vector2.zero
+			instance.ImageRectSize = style.rect_size or Vector2.one
+			instance.ResampleMode = style.resample or Enum.ResamplerMode.Default
+			instance.ScaleType = style.scale_type or Enum.ScaleType.Stretch
+			instance.SliceCenter = style.slice_center or Rect.new()
+			instance.SliceScale = style.slice_scale or 0
 		elseif primitive.hotspot then
 			instance = self:acquire<<Frame>>("Frame", "Hotspot")
 			instance.BackgroundTransparency = 1
 			instance.Active = true
 		else
 			instance = self:acquire<<Frame>>("Frame")
-			instance.BackgroundColor3 = primitive.color or COLOR_WHITE
+			instance.BackgroundColor3 = primitive.color or color.WHITE
 			instance.BackgroundTransparency = primitive.transparency or 0
 		end
 
@@ -128,7 +132,7 @@ function roblox_frontend.render(self: Renderer, composite: types.Composite)
 	debug.profileend()
 end
 
-function roblox_frontend.destroy(self: Renderer)
+function gui_object_renderer.destroy(self: Renderer)
 	for _, pool in self.pools do
 		for _, instance in pool.instances do
 			instance:Destroy()
@@ -137,4 +141,4 @@ function roblox_frontend.destroy(self: Renderer)
 	table.clear(self.pools)
 end
 
-return table.freeze(roblox_frontend)
+return table.freeze(gui_object_renderer)

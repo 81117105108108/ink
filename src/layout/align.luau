@@ -1,5 +1,5 @@
-const types = require("../types")
 const translate = require("./translate")
+const types = require("../types")
 
 const function align(composite: types.Composite, container: Rect, ax: number?, ay: number?): types.Composite
 	const b = composite.bounds

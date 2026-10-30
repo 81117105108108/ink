@@ -1,10 +1,10 @@
 local RunService = game:GetService("RunService")
 
+local gui_object_renderer = require("./gui_object_renderer")
+local input_source_intent = require("./input_source_intent")
 local rect_sized = require("../rects/rect_sized")
-local roblox_renderer = require("./roblox_renderer")
 local scope = require("./scope")
 local types = require("../types")
-local roblox_intent = require("./roblox_intent")
 local update_intent_state = require("./update_intent_state")
 
 type Cleanup = () -> ()
@@ -36,7 +36,7 @@ const function ui_lab_story<C>(story: types.Story<C>): GenericStory<C>
 		controls = story.controls,
 		render = function(generic_properties)
 			const root_scope = scope.new()
-			const renderer = roblox_renderer.new(generic_properties.target)
+			const renderer = gui_object_renderer.new(generic_properties.target)
 
 			const catcher = Instance.new("Frame")
 			catcher.Name = "InkInputCatcher"
@@ -46,7 +46,7 @@ const function ui_lab_story<C>(story: types.Story<C>): GenericStory<C>
 			catcher.Active = true
 			catcher.Parent = generic_properties.target
 
-			const intent = roblox_intent.new(catcher, function(point)
+			const intent = input_source_intent.new(catcher, function(point)
 				return point - generic_properties.target.AbsolutePosition
 			end)
 

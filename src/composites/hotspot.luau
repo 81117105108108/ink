@@ -19,6 +19,7 @@ const function new_hotspot(): types.Hotspot
 	}
 end
 
+--- Creates an invisible interactive region.
 const function hotspot(s: types.Scope, bounds: Rect, options: types.HotspotOptions?): (types.Hotspot, types.Composite)
 	const hotspot = s:once(new_hotspot)
 	const primitive: types.Primitive = {

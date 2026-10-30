@@ -1,32 +1,21 @@
+local is_equal_packs = require("./is_equal_packs")
 local types = require("../types")
 
-type ExpensiveState<T> = {
+type State<T> = {
 	args: types.Pack,
 	value: types.Pack,
 	first_computed: boolean,
 }
 
-const function new_state<T>(): ExpensiveState<T>
+const function new_state<T>(): State<T>
 	return { args = { n = 0 }, value = { n = 0 }, first_computed = false }
 end
 
-const function is_same_args(stored: { [number]: unknown, n: number }, ...: unknown): boolean
-	const n = select("#", ...)
-	if stored.n ~= n then
-		return false
-	end
-	for i = 1, n do
-		if stored[i] ~= select(i, ...) then
-			return false
-		end
-	end
-	return true
-end
-
+--- Caches a computation’s results, recomputing only when its arguments change.
 const function expensive<A..., R...>(s: types.Scope, compute: (s: types.Scope, A...) -> R..., ...: A...): R...
 	const state = s:once(new_state)
 
-	const skip_recompute = state.first_computed and is_same_args(state.args, ...)
+	const skip_recompute = state.first_computed and is_equal_packs(state.args, ...)
 	if skip_recompute then
 		return table.unpack<<any>>(state.value, 1, state.value.n)
 	end

@@ -1,6 +1,6 @@
 [package]
 name = "teamfireworks/ink"
-version = "0.1.0-rc.2"
+version = "0.1.0-rc.3"
 description = "Zero-Hierarchy Immediate-Mode UI for Roblox"
 authors = ["rniraclefire"]
 logo = ".github/assets/brand/icon.png"
@@ -18,4 +18,4 @@ rojo = "rojo-rbx/rojo@7.7.1"
 asphalt = "jacktabscode/asphalt@2.0.2"
 
 [scripts]
-dev = ["rojo serve examples.project.json"]
+dev = ["rojo serve examples.project.json", "luaudocs dev"]

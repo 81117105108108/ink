@@ -12,8 +12,10 @@ export type Story<C = nil> = types.Story<C>
 export type StoryProperties<C = nil> = types.StoryProperties<C>
 export type Scope = types.Scope
 
-return table.freeze({
-	version = "0.1.0-rc.3",
+--- @class Ink
+--- Zero-hierarchy immediate-mode UI library for Roblox and Vortex.
+const ink = table.freeze({
+	version = require("@self/version"),
 
 	-- Composites
 	compose = require("@self/composites/compose"),
@@ -25,7 +27,9 @@ return table.freeze({
 	-- Layouts
 	align = require("@self/layout/align"),
 	clip = require("@self/layout/clip"),
+	distribute = require("@self/layout/distribute"),
 	h_stack = require("@self/layout/h_stack"),
+	masonry = require("@self/layout/masonry"),
 	pad_all = require("@self/layout/pad_all"),
 	pad_sides = require("@self/layout/pad_sides"),
 	pad_xy = require("@self/layout/pad_xy"),
@@ -51,15 +55,22 @@ return table.freeze({
 	-- Animation
 	lerp = require("@self/animation/lerp"),
 	color = require("@self/animation/color"),
-	timer = require("@self/animation/timer"),
 	spring = require("@self/animation/spring"),
 	tween = require("@self/animation/tween"),
 
+	-- Timing
+	timer = require("@self/timing/timer"),
+	after = require("@self/timing/after"),
+	every = require("@self/timing/every"),
+
 	-- Runtime
+	async = require("@self/runtime/async"),
 	scope = require("@self/runtime/scope"),
 	expensive = require("@self/runtime/expensive"),
 	update_intent_state = require("@self/runtime/update_intent_state"),
-	roblox_renderer = require("@self/runtime/roblox_renderer"),
-	roblox_intent = require("@self/runtime/roblox_intent"),
+	gui_object_renderer = require("@self/runtime/gui_object_renderer"),
+	input_source_intent = require("@self/runtime/input_source_intent"),
 	ui_labs_story = require("@self/runtime/ui_labs_story"),
 })
+
+return ink

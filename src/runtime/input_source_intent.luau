@@ -1,20 +1,17 @@
 const types = require("../types")
 
-const roblox_intent = {}
-roblox_intent.__index = roblox_intent
+const input_source_intent = {}
+input_source_intent.__index = input_source_intent
 
-export type RobloxIntent = setmetatable<
-	{
-		pending: types.Intent, -- built up by events between frames
-		state: types.IntentState, -- hotspots and the active hotspot
-		to_local: (Vector2) -> Vector2,
-		screen_pointer: Vector2,
-		last_pointer: Vector2,
-		touch: InputObject?,
-		connections: { RBXScriptConnection },
-	},
-	typeof(roblox_intent)
->
+export type RobloxIntent = setmetatable<{
+	pending: types.Intent,
+	state: types.IntentState,
+	to_local: (Vector2) -> Vector2,
+	screen_pointer: Vector2,
+	last_pointer: Vector2,
+	touch: InputObject?,
+	connections: { RBXScriptConnection },
+}, typeof(input_source_intent)>
 
 const function new_intent(): types.Intent
 	return {
@@ -29,7 +26,7 @@ const function new_intent(): types.Intent
 	}
 end
 
-function roblox_intent.new(source: types.IntentSource, to_local: (Vector2) -> Vector2): RobloxIntent
+function input_source_intent.new(source: types.IntentSource, to_local: (Vector2) -> Vector2): RobloxIntent
 	const self: RobloxIntent = setmetatable({
 		pending = new_intent(),
 		state = { hotspots = {}, active = nil },
@@ -38,7 +35,7 @@ function roblox_intent.new(source: types.IntentSource, to_local: (Vector2) -> Ve
 		last_pointer = Vector2.zero,
 		touch = nil,
 		connections = {},
-	}, roblox_intent)
+	}, input_source_intent)
 
 	const pending = self.pending
 
@@ -92,7 +89,7 @@ function roblox_intent.new(source: types.IntentSource, to_local: (Vector2) -> Ve
 	return self
 end
 
-function roblox_intent.take(self: RobloxIntent): types.Intent
+function input_source_intent.take(self: RobloxIntent): types.Intent
 	const pending = self.pending
 	const pointer = self.to_local(self.screen_pointer)
 
@@ -109,7 +106,7 @@ function roblox_intent.take(self: RobloxIntent): types.Intent
 	return snapshot
 end
 
-function roblox_intent.commit(self: RobloxIntent, composite: types.Composite)
+function input_source_intent.commit(self: RobloxIntent, composite: types.Composite)
 	const hotspots = self.state.hotspots
 	table.clear(hotspots)
 	for _, primitive in composite.primitives do
@@ -121,7 +118,7 @@ function roblox_intent.commit(self: RobloxIntent, composite: types.Composite)
 	end
 end
 
-function roblox_intent.destroy(self: RobloxIntent)
+function input_source_intent.destroy(self: RobloxIntent)
 	for _, connection in self.connections do
 		connection:Disconnect()
 	end
@@ -130,4 +127,4 @@ function roblox_intent.destroy(self: RobloxIntent)
 	self.state.active = nil
 end
 
-return table.freeze(roblox_intent)
+return table.freeze(input_source_intent)

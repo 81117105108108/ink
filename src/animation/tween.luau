@@ -1,9 +1,9 @@
 local TweenService = game:GetService("TweenService")
 
-local scope = require("../runtime/scope")
 local lerp_types = require("./datatypes/lerp_types")
+local scope = require("../runtime/scope")
 
-export type TweenState<T> = {
+export type State<T> = {
 	kind: string?,
 	initial: T,
 	goal: T,
@@ -11,7 +11,7 @@ export type TweenState<T> = {
 	start: number,
 }
 
-const function new_state<T>(): TweenState<T>
+const function new_state<T>(): State<T>
 	return {
 		kind = nil,
 		initial = nil,

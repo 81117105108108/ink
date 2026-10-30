@@ -1,0 +1,42 @@
+title = "Ink"
+description = "Zero-hierachy immediate-mode UI library for Roblox and Vortex."
+
+[source]
+entries = ["src"]
+
+[repo]
+url = "https://github.com/teamfireworks/ink"
+
+[site]
+siteTitle = "Ink"
+# logo = "/logo.svg"
+# favicon = "/favicon.ico"
+# ogImage = "/og.png"
+footer = { copyright = "Copyright © 2026 Team Fireworks Games" }
+
+[[site.nav]]
+text = "Guide"
+link = "/guide/getting-started"
+activeMatch = "^/guide/"
+
+# Extra head tags on every page (analytics, site verification).
+# [[site.head]]
+# tag = "script"
+# attrs = { defer = "true", src = "https://plausible.io/js/script.js", "data-domain" = "docs.example.com" }
+
+[api]
+includePrivate = false
+linkRobloxTypes = true
+
+[docs]
+# Where the site lives (authored content + the generated machinery under it).
+# dir = ".luaudocs"
+# Published site URL: enables sitemap.xml and, for project pages
+# (user.github.io/repo/), derives the base path.
+# url = "https://ink.teamfireworks.org"
+# Keep .vitepress/generated/readme.md, a copy of README.md (moonwave hide
+# markers honored), fresh for an index.md that @includes it.
+# includeReadme = true
+# Emit llms.txt and llms-full.txt in public/ (guides, then API pages) so AI
+# tools can read the docs without scraping HTML. Enabled by default.
+llms = false
