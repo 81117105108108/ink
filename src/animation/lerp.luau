@@ -1,9 +1,13 @@
-const lerp_type = require("./datatypes/lerp_type")
+const lerp_types = require("./datatypes/lerp_types")
 
-const function lerp<T>(goal: T, initial: T, alpha: number): T
-	const kind = typeof(goal)
-	const lerp_type = lerp_type[kind]
-	return if lerp_type then lerp_type(goal, initial, alpha) elseif alpha > 0.5 then initial else goal
+const function lerp<T>(initial: T, goal: T, alpha: number): T
+	const initial_kind, goal_type = typeof(initial), typeof(goal)
+	if initial_kind == goal_type then
+		const lerp_type = lerp_types[initial_kind]
+		return lerp_type(initial, initial, alpha) or error(`Cannot lerp a {initial_kind}`)
+	else
+		error(`Cannot lerp an initial {initial_kind} with a goal {goal_type}`)
+	end
 end
 
 return lerp

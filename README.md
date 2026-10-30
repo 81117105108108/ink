@@ -11,14 +11,14 @@ instances and keeping it synchronized with your state, you compose entire UI,
 every frame, with plain low-level `Rect` primitives.
 
 - **No hierarchy.** Arrange your UI beyond the bounds of Roblox's UI system.
-- **No object lifetimes.** State is stored at named keys that persists between frames. 
+- **No object lifetimes.** State is stored at named keys that persists between frames.
 - **Input as hotspots.** Drag-and-drop, scroll views, and sliders are trivialized.
 
 > [!WARNING]
 > Ink is in early alpha. Ink's API will change between releases.
 
 ## Installation
- 
+
 ```sh
 embr add teamfireworks/ink
 ```
@@ -40,16 +40,16 @@ const BUTTON_STYLE: ink.TextStyle = {
 	size = 18,
 	font = Enum.Font.GothamBold,
 }
- 
+
 -- ...into the render loop...
 
 -- Components are plain functions, much like other libraries.
 const function button(scope: ink.Scope, label: string, on_activated: () -> ())
     local label = ink.text(label, BUTTON_STYLE)
 
-    -- Ink's API members often return a new `Composite`, ie. they're immutable. 
+    -- Ink's API members often return a new `Composite`, ie. they're immutable.
     -- Remember to assign the same composite with the same variable!
-    -- 
+    --
     -- Here, Ink creates a cloned `Composite` with it's bounds padded by `16`
     -- pixels horizontally and `12` pixels vertically.
     --
@@ -121,7 +121,7 @@ const function ui(scope: Scope)
     const list = ink.v_stack(buttons, 8)
 
     -- Your eyes are not deceiving you.
-    
+
     -- It's that easy.
 
     return list
@@ -184,5 +184,7 @@ end)
 
 Ink is based on the ideas of Daniel P. H. Fox's three-part series,
 [I made my perfect UI library](https://fluff.blog/2026/09/13/i-made-my-perfect-ui-library.html).
+
+Spring coefficients are from ffrostfall's Fluid library.
 
 Ink is available [under the MIT License.](./LICENSE)

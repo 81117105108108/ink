@@ -1,8 +1,57 @@
 local scope = require("./runtime/scope")
 
+-- Utility
+
 export type Cleanup = () -> ()
 
 export type Pack<T = unknown> = { [number]: T, n: number }
+
+-- Styling
+
+export type RoundStyle = {
+	tl: number?,
+	tr: number?,
+	bl: number?,
+	br: number?,
+}
+
+export type TextStyle = {
+	size: number,
+	font: Enum.Font,
+}
+
+export type ImageStyle = {
+	idk_bro: never,
+}
+
+-- Composites
+
+export type Primitive = {
+	bounds: Rect,
+	clip: Rect?,
+
+	color: Color3?,
+	transparency: number?,
+	round: RoundStyle?,
+	rotation: number?,
+
+	text: string?,
+	text_style: TextStyle?,
+	image: string?,
+	image_style: ImageStyle?,
+	hotspot: Hotspot?,
+	hotspot_wheel: boolean?,
+}
+
+export type Composite = {
+	primitives: { Primitive },
+	bounds: Rect,
+	hitbox_scope: scope.Scope?,
+}
+
+-- Runtime
+
+export type Scope = scope.Scope
 
 export type IntentSource = {
 	read InputBegan: RBXScriptSignal<InputObject>,
@@ -39,50 +88,29 @@ export type HotspotOptions = {
 	wheel: boolean?,
 }
 
-export type RoundStyle = {
-	tl: number?,
-	tr: number?,
-	bl: number?,
-	br: number?,
-}
+export type function ProcessControls(controls: type): type
+	const CONTROL_VALUE = types.singleton("ControlValue")
 
-export type TextStyle = {
-	size: number,
-	font: Enum.Font,
-}
+	if controls.tag ~= "table" then
+		return controls
+	end
 
-export type ImageStyle = {
-	idk_bro: never,
-}
+	const result = types.newtable()
+	for key, control in controls:properties() do
+		local control_value = control.read
+		if control.read and control.read.tag == "table" then
+			control_value = control.read:readproperty(CONTROL_VALUE)
+		end
+		result:setreadproperty(key, control_value)
+	end
 
-export type Primitive = {
-	bounds: Rect,
-	clip: Rect?,
-
-	color: Color3?,
-	transparency: number?,
-	round: RoundStyle?,
-	rotation: number?,
-
-	text: string?,
-	text_style: TextStyle?,
-	image: string?,
-	image_style: ImageStyle?,
-	hotspot: Hotspot?,
-	hotspot_wheel: boolean?,
-}
-
-export type Composite = {
-	primitives: { Primitive },
-	bounds: Rect,
-	hitbox_scope: scope.Scope?,
-}
-
-export type Scope = scope.Scope
+	return result
+end
 
 export type StoryProperties<C = nil> = {
-	controls: C,
+	controls: ProcessControls<C>,
 	target: GuiObject,
+	target_bounds: Rect,
 	scope: scope.Scope,
 }
 

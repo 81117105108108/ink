@@ -397,7 +397,7 @@ function color.lab_to_color3(c: Vector3): Color3
 end
 
 function color.color3_to_lch(c: Color3): Vector3
-	return color.oklab_to_oklch(color.linear_srgb_to_oklab(color.color3_to_lab(c)))
+	return color.oklab_to_oklch(color.color3_to_lab(c))
 end
 
 function color.lch_to_color3(c: Vector3): Color3

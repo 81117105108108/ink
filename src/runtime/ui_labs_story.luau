@@ -1,5 +1,6 @@
 local RunService = game:GetService("RunService")
 
+local rect_sized = require("../rects/rect_sized")
 local roblox_renderer = require("./roblox_renderer")
 local scope = require("./scope")
 local types = require("../types")
@@ -50,8 +51,9 @@ const function ui_lab_story<C>(story: types.Story<C>): GenericStory<C>
 			end)
 
 			const ink_properties: types.StoryProperties<C> = {
-				controls = table.clone(generic_properties.controls),
+				controls = table.clone(generic_properties.controls) :: types.ProcessControls<C>,
 				target = generic_properties.target,
+				target_bounds = Rect.new(),
 				scope = root_scope,
 			}
 
@@ -60,6 +62,9 @@ const function ui_lab_story<C>(story: types.Story<C>): GenericStory<C>
 			end)
 
 			const connection = RunService.PreRender:Connect(function(dt: number)
+				ink_properties.target_bounds =
+					rect_sized(generic_properties.target.AbsoluteSize.X, generic_properties.target.AbsoluteSize.Y)
+
 				root_scope:next(dt)
 				update_intent_state(intent.state, intent:take())
 				const composite = story.render(ink_properties)

@@ -7,7 +7,7 @@ const function lerp_color3(initial: Color3, goal: Color3, ratio: number)
 	return color.lab_to_color3(interpolated_vector)
 end
 
-const lerp_type: { [string]: (initial: any, goal: any, ratio: number) -> any } = {
+const lerp_types: { [string]: (initial: any, goal: any, ratio: number) -> any } = {
 	number = math.lerp,
 	vector = vector.lerp,
 
@@ -71,4 +71,4 @@ const lerp_type: { [string]: (initial: any, goal: any, ratio: number) -> any } =
 	end,
 }
 
-return lerp_type
+return lerp_types

@@ -15,17 +15,6 @@ export type Scope = types.Scope
 return table.freeze({
 	version = "0.1.0-rc.3",
 
-	-- Rects
-	inset_rect = require("@self/rects/inset_rect"),
-	inset_rect_sides = require("@self/rects/inset_rect_sides"),
-	inset_rect_xy = require("@self/rects/inset_rect_xy"),
-	intersect_rects = require("@self/rects/intersect_rects"),
-	is_equal_rects = require("@self/rects/is_equal_rects"),
-	is_in_rect = require("@self/rects/is_in_rect"),
-	rect = require("@self/rects/rect"),
-	rect_sized = require("@self/rects/rect_sized"),
-	union_rects = require("@self/rects/union_rects"),
-
 	-- Composites
 	compose = require("@self/composites/compose"),
 	solid = require("@self/composites/solid"),
@@ -43,6 +32,17 @@ return table.freeze({
 	translate = require("@self/layout/translate"),
 	v_stack = require("@self/layout/v_stack"),
 
+	-- Rects
+	inset_rect = require("@self/rects/inset_rect"),
+	inset_rect_sides = require("@self/rects/inset_rect_sides"),
+	inset_rect_xy = require("@self/rects/inset_rect_xy"),
+	intersect_rects = require("@self/rects/intersect_rects"),
+	is_equal_rects = require("@self/rects/is_equal_rects"),
+	is_in_rect = require("@self/rects/is_in_rect"),
+	rect = require("@self/rects/rect"),
+	rect_sized = require("@self/rects/rect_sized"),
+	union_rects = require("@self/rects/union_rects"),
+
 	-- Styling
 	rotate = require("@self/styling/rotate"),
 	tint = require("@self/styling/tint"),
@@ -52,6 +52,7 @@ return table.freeze({
 	lerp = require("@self/animation/lerp"),
 	color = require("@self/animation/color"),
 	timer = require("@self/animation/timer"),
+	spring = require("@self/animation/spring"),
 	tween = require("@self/animation/tween"),
 
 	-- Runtime

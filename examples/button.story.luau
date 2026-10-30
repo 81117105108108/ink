@@ -55,14 +55,8 @@ return ink.ui_labs_story({
 		end
 		count_scope:set(count)
 
-		local button = ink.compose({
-			shadow,
-			surface,
-			spot,
-		}, shadow.bounds)
-
-		const viewport_size = properties.target.AbsoluteSize
-		button = ink.align(button, ink.rect(0, 0, viewport_size.X, viewport_size.Y), 0.5, 0.5)
+		local button = ink.compose({ shadow, surface, spot }, shadow.bounds)
+		button = ink.align(button, properties.target_bounds, 0.5, 0.5)
 
 		return button
 	end,
