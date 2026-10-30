@@ -32,7 +32,8 @@ const lerp_types: {
 	NumberSequenceKeypoint = function(initial: NumberSequenceKeypoint, goal: NumberSequenceKeypoint, ratio: number)
 		return NumberSequenceKeypoint.new(
 			math.lerp(initial.Time, goal.Time, ratio),
-			math.lerp(initial.Value, goal.Value, ratio)
+			math.lerp(initial.Value, goal.Value, ratio),
+			math.lerp(initial.Envelope, goal.Envelope, ratio)
 		)
 	end,
 	PhysicalProperties = function(initial: PhysicalProperties, goal: PhysicalProperties, ratio: number)
