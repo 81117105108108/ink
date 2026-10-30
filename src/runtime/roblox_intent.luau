@@ -1,5 +1,3 @@
-const UserInputService = game:GetService("UserInputService")
-
 const types = require("../types")
 
 const roblox_intent = {}
@@ -31,7 +29,7 @@ const function new_intent(): types.Intent
 	}
 end
 
-function roblox_intent.new(to_local: (Vector2) -> Vector2): RobloxIntent
+function roblox_intent.new(source: types.IntentSource, to_local: (Vector2) -> Vector2): RobloxIntent
 	const self: RobloxIntent = setmetatable({
 		pending = new_intent(),
 		state = { hotspots = {}, active = nil },
@@ -51,7 +49,7 @@ function roblox_intent.new(to_local: (Vector2) -> Vector2): RobloxIntent
 
 	table.insert(
 		self.connections,
-		UserInputService.InputBegan:Connect(function(input)
+		source.InputBegan:Connect(function(input)
 			if is_primary(input) then
 				if input.UserInputType == Enum.UserInputType.Touch then
 					self.touch = input
@@ -68,7 +66,7 @@ function roblox_intent.new(to_local: (Vector2) -> Vector2): RobloxIntent
 
 	table.insert(
 		self.connections,
-		UserInputService.InputChanged:Connect(function(input)
+		source.InputChanged:Connect(function(input)
 			const t = input.UserInputType
 			if t == Enum.UserInputType.MouseMovement or (t == Enum.UserInputType.Touch and input == self.touch) then
 				self.screen_pointer = Vector2.new(input.Position.X, input.Position.Y)
@@ -80,7 +78,7 @@ function roblox_intent.new(to_local: (Vector2) -> Vector2): RobloxIntent
 
 	table.insert(
 		self.connections,
-		UserInputService.InputEnded:Connect(function(input)
+		source.InputEnded:Connect(function(input)
 			if is_primary(input) then
 				self.touch = nil
 				pending.down = false

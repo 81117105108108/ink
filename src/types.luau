@@ -1,5 +1,15 @@
 local scope = require("./runtime/scope")
 
+export type Cleanup = () -> ()
+
+export type Pack<T = unknown> = { [number]: T, n: number }
+
+export type IntentSource = {
+	read InputBegan: RBXScriptSignal<InputObject>,
+	read InputChanged: RBXScriptSignal<InputObject>,
+	read InputEnded: RBXScriptSignal<InputObject>,
+}
+
 export type Intent = {
 	pointer: Vector2,
 	pointer_delta: Vector2,
@@ -69,5 +79,19 @@ export type Composite = {
 }
 
 export type Scope = scope.Scope
+
+export type StoryProperties<C = nil> = {
+	controls: C,
+	target: GuiObject,
+	scope: scope.Scope,
+}
+
+export type Story<C = nil> = {
+	name: string?,
+	summary: string?,
+	cleanup: Cleanup?,
+	controls: C?,
+	render: (properties: StoryProperties<C>) -> Composite,
+}
 
 return nil

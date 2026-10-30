@@ -8,10 +8,12 @@ export type Hotspot = types.Hotspot
 export type HotspotOptions = types.HotspotOptions
 export type TextStyle = types.TextStyle
 export type ImageStyle = types.ImageStyle
+export type Story<C = nil> = types.Story<C>
+export type StoryProperties<C = nil> = types.StoryProperties<C>
 export type Scope = types.Scope
 
 return table.freeze({
-	version = "0.1.0-rc.2",
+	version = "0.1.0-rc.3",
 
 	-- Rects
 	inset_rect = require("@self/rects/inset_rect"),
@@ -47,6 +49,7 @@ return table.freeze({
 	round = require("@self/styling/round"),
 
 	-- Animation
+	lerp = require("@self/animation/lerp"),
 	oklab = require("@self/animation/timer"),
 	timer = require("@self/animation/timer"),
 	tween = require("@self/animation/tween"),
@@ -57,5 +60,5 @@ return table.freeze({
 	update_intent_state = require("@self/runtime/update_intent_state"),
 	roblox_renderer = require("@self/runtime/roblox_renderer"),
 	roblox_intent = require("@self/runtime/roblox_intent"),
-	roblox_story = require("@self/runtime/roblox_story"),
+	ui_labs_story = require("@self/runtime/ui_labs_story"),
 })

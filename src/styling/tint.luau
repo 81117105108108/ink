@@ -1,13 +1,14 @@
-local types = require("../types")
+const types = require("../types")
 
-const function tint(c: types.Composite, color: Color3?, transparency: number?)
-	c = table.clone(c)
-	const primitives = table.clone(c.primitives)
-	for _, primitive in primitives do
+const function tint(c: types.Composite, color: Color3?, transparency: number?): types.Composite
+	const new_primitives = table.create<<types.Primitive>>(#c.primitives)
+	for index, primitive in c.primitives do
+		primitive = table.clone(primitive)
 		primitive.color = color or primitive.color
 		primitive.transparency = transparency or primitive.transparency
+		new_primitives[index] = primitive
 	end
-	return c
+	return { primitives = new_primitives, bounds = c.bounds }
 end
 
 return tint

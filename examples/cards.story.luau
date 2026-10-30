@@ -55,16 +55,16 @@ const function render_card(card: Card)
 	return ink.compose({ bg, logo, fg }, bg.bounds)
 end
 
-return {
-	render = ink.roblox_story(function(scope, props)
+return ink.ui_labs_story({
+	render = function(properties: ink.StoryProperties)
 		local c = {}
 		for index, card in CARDS do
 			c[index] = ink.translate(render_card(card), (index - 1) * 32)
 		end
 		c = ink.v_stack(c, 42)
 
-		const viewport_size = props.target.AbsoluteSize
+		const viewport_size = properties.target.AbsoluteSize
 
 		return ink.align(c, ink.rect_sized(viewport_size.X, viewport_size.Y), 0.5, 0.5)
-	end),
-}
+	end,
+})

@@ -16,3 +16,6 @@ luau-lsp = "johnnymorganz/luau-lsp@1.70.1"
 stylua = "johnnymorganz/stylua@2.6.0"
 rojo = "rojo-rbx/rojo@7.7.1"
 asphalt = "jacktabscode/asphalt@2.0.2"
+
+[scripts]
+dev = ["rojo serve examples.project.json"]

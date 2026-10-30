@@ -21,6 +21,10 @@ const function new_state<T>(): TweenState<T>
 	}
 end
 
+const function default_lerp(initial: unknown, goal: unknown, alpha: number)
+	return if alpha > 0.5 then goal else initial
+end
+
 const function tween<T>(
 	s: scope.Scope,
 	goal: T,
@@ -31,7 +35,7 @@ const function tween<T>(
 	const state = s:once(new_state<<T>>)
 	const now = s:time()
 	const kind = typeof(goal)
-	const lerp = lerp_type[kind] or error(`Cannot tween a {kind}`)
+	const lerp = lerp_type[kind] or default_lerp
 
 	if state.kind ~= kind then
 		state.kind, state.initial, state.goal, state.current, state.start = kind, goal, goal, goal, now

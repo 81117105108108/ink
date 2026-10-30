@@ -7,9 +7,9 @@ const CYCLES_PER_SECOND = 8
 const COLOR_START = Color3.new(1, 0, 0)
 const COLOR_END = Color3.new(0, 0, 1)
 
-return {
-	render = ink.roblox_story(function(scope, props)
-		const elapsed = ink.timer(scope:key("timer"))
+return ink.ui_labs_story({
+	render = function(properties: ink.StoryProperties)
+		const elapsed = ink.timer(properties.scope:key("timer"))
 
 		local rows = table.create<<ink.Composite>>(CELL_COUNT)
 		for x = 1, CELL_COUNT do
@@ -28,5 +28,5 @@ return {
 		rows = ink.v_stack(rows, CELL_GAP)
 
 		return rows
-	end),
-}
+	end,
+})

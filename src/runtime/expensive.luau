@@ -1,13 +1,13 @@
-local scope = require("./scope")
+local types = require("../types")
 
 type ExpensiveState<T> = {
-	args: { [number]: unknown, n: number },
+	args: types.Pack,
+	value: types.Pack,
 	first_computed: boolean,
-	value: T,
 }
 
 const function new_state<T>(): ExpensiveState<T>
-	return { args = { n = 0 }, value = nil, first_computed = false }
+	return { args = { n = 0 }, value = { n = 0 }, first_computed = false }
 end
 
 const function is_same_args(stored: { [number]: unknown, n: number }, ...: unknown): boolean
@@ -23,19 +23,19 @@ const function is_same_args(stored: { [number]: unknown, n: number }, ...: unkno
 	return true
 end
 
-const function expensive<T, A...>(s: scope.Scope, compute: (s: scope.Scope, A...) -> T, ...: A...): T
+const function expensive<A..., R...>(s: types.Scope, compute: (s: types.Scope, A...) -> R..., ...: A...): R...
 	const state = s:once(new_state)
 
 	const skip_recompute = state.first_computed and is_same_args(state.args, ...)
 	if skip_recompute then
-		return state.value
+		return table.unpack<<any>>(state.value, 1, state.value.n)
 	end
 
-	state.args = table.pack(... :: unknown)
-	state.value = compute(s, ...)
+	state.args = (table.pack :: any)(...)
+	state.value = (table.pack :: any)(compute(s, ...))
 	state.first_computed = true
 
-	return state.value
+	return table.unpack<<any>>(state.value, 1, state.value.n)
 end
 
 return expensive
