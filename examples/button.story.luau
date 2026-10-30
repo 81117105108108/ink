@@ -29,10 +29,10 @@ return ink.ui_labs_story({
 		local hot, spot = ink.hotspot(properties.scope:key("hitbox"), bg.bounds)
 
 		const target_bg = if hot.state == Enum.GuiState.Hover
-			then ink.oklab.lighten_color(properties.controls.color, 0.05)
-			elseif hot.state == Enum.GuiState.Press then ink.oklab.lighten_color(properties.controls.color, -0.05)
+			then ink.color.shade(properties.controls.color, 0.05)
+			elseif hot.state == Enum.GuiState.Press then ink.color.shade(properties.controls.color, -0.05)
 			else properties.controls.color
-		const target_fg = ink.oklab.lighten_color(target_bg, -0.25)
+		const target_fg = ink.color.shade(target_bg, -0.25)
 
 		bg = ink.tint(bg, ink.tween(properties.scope:key("color_bg"), target_bg, 0.2))
 		content = ink.tint(content, ink.tween(properties.scope:key("color_fg"), target_fg, 0.2))
