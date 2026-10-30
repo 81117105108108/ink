@@ -50,7 +50,7 @@ return table.freeze({
 
 	-- Animation
 	lerp = require("@self/animation/lerp"),
-	oklab = require("@self/animation/timer"),
+	oklab = require("@self/animation/oklab"),
 	timer = require("@self/animation/timer"),
 	tween = require("@self/animation/tween"),
 

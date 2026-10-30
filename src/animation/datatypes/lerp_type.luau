@@ -1,10 +1,10 @@
 local oklab = require("../oklab")
 
 const function lerp_color3(initial: Color3, goal: Color3, ratio: number)
-	local initial_vector = oklab.linear_srgb_to_oklab(oklab.color3_to_linear_srgb(initial))
-	local goal_vector = oklab.linear_srgb_to_oklab(oklab.color3_to_linear_srgb(goal))
+	local initial_vector = oklab.color3_to_lab(initial)
+	local goal_vector = oklab.color3_to_lab(goal)
 	local interpolated_vector = initial_vector:Lerp(goal_vector, ratio)
-	return oklab.linear_srgb_to_color3(oklab.oklab_to_linear_srgb(interpolated_vector))
+	return oklab.lab_to_color3(interpolated_vector)
 end
 
 const lerp_type: { [string]: (initial: any, goal: any, ratio: number) -> any } = {

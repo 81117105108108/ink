@@ -13,9 +13,9 @@ local function cbrt(x: number)
 	return math.sign(x) * math.abs(x) ^ (1 / 3)
 end
 
-local Oklab = {}
+local oklab = {}
 
-function Oklab.linear_srgb_to_oklab(c: Vector3): Vector3
+function oklab.linear_srgb_to_oklab(c: Vector3): Vector3
 	local l = 0.4122214708 * c.X + 0.5363325363 * c.Y + 0.0514459929 * c.Z
 	local m = 0.2119034982 * c.X + 0.6806995451 * c.Y + 0.1073969566 * c.Z
 	local s = 0.0883024619 * c.X + 0.2817188376 * c.Y + 0.6299787005 * c.Z
@@ -31,7 +31,7 @@ function Oklab.linear_srgb_to_oklab(c: Vector3): Vector3
 	)
 end
 
-function Oklab.oklab_to_linear_srgb(c: Vector3): Vector3
+function oklab.oklab_to_linear_srgb(c: Vector3): Vector3
 	local l_ = c.X + 0.3963377774 * c.Y + 0.2158037573 * c.Z
 	local m_ = c.X - 0.1055613458 * c.Y - 0.0638541728 * c.Z
 	local s_ = c.X - 0.0894841775 * c.Y - 1.2914855480 * c.Z
@@ -50,7 +50,7 @@ end
 -- Finds the maximum saturation possible for a given hue that fits in sRGB.
 -- Saturation here is defined as S = C/L
 -- a and b must be normalised so a^2 + b^2 == 1
-function Oklab.compute_max_saturation(a: number, b: number): number
+function oklab.compute_max_saturation(a: number, b: number): number
 	-- Max saturation will be when one of r, g or b goes below zero.
 
 	-- Select different coefficients depending on which component goes below zero first
@@ -109,12 +109,12 @@ end
 
 -- finds L_cusp and C_cusp for a given hue
 -- a and b must be normalised so a^2 + b^2 == 1
-function Oklab.find_cusp(a: number, b: number): (number, number)
+function oklab.find_cusp(a: number, b: number): (number, number)
 	-- First, find the maximum saturation (saturation S = C/L)
-	local S_cusp = Oklab.compute_max_saturation(a, b)
+	local S_cusp = oklab.compute_max_saturation(a, b)
 
 	-- Convert to linear sRGB to find the first point where at least one of r,g or b >= 1:
-	local rgb_at_max = Oklab.oklab_to_linear_srgb(Vector3.new(1, S_cusp * a, S_cusp * b))
+	local rgb_at_max = oklab.oklab_to_linear_srgb(Vector3.new(1, S_cusp * a, S_cusp * b))
 	local L_cusp = cbrt(1 / math.max(rgb_at_max.X, rgb_at_max.Y, rgb_at_max.Z))
 	local C_cusp = L_cusp * S_cusp
 
@@ -125,9 +125,9 @@ end
 -- L = L0 * (1 - t) + t * L1;
 -- C = t * C1;
 -- a and b must be normalized so a^2 + b^2 == 1
-function Oklab.find_gamut_intersection(a: number, b: number, L1: number, C1: number, L0: number): number
+function oklab.find_gamut_intersection(a: number, b: number, L1: number, C1: number, L0: number): number
 	-- Find the cusp of the gamut triangle
-	local L_cusp, C_cusp = Oklab.find_cusp(a, b)
+	local L_cusp, C_cusp = oklab.find_cusp(a, b)
 
 	-- Find the intersection for upper and lower half seprately
 	local t
@@ -206,12 +206,12 @@ function Oklab.find_gamut_intersection(a: number, b: number, L1: number, C1: num
 	return t
 end
 
-function Oklab.gamut_clip_preserve_chroma(rgb: Vector3): Vector3
+function oklab.gamut_clip_preserve_chroma(rgb: Vector3): Vector3
 	if rgb.X < 1 and rgb.Y < 1 and rgb.Z < 1 and rgb.X > 0 and rgb.Y > 0 and rgb.Z > 0 then
 		return rgb
 	end
 
-	local lab = Oklab.linear_srgb_to_oklab(rgb)
+	local lab = oklab.linear_srgb_to_oklab(rgb)
 
 	local L = lab.X
 	local eps = 0.00001
@@ -220,19 +220,19 @@ function Oklab.gamut_clip_preserve_chroma(rgb: Vector3): Vector3
 	local b_ = if C == 0 then 0 else lab.Z / C
 	local L0 = math.clamp(L, 0, 1)
 
-	local t = Oklab.find_gamut_intersection(a_, b_, L, C, L0)
+	local t = oklab.find_gamut_intersection(a_, b_, L, C, L0)
 	local L_clipped = L0 * (1 - t) + t * L
 	local C_clipped = t * C
 
-	return Oklab.oklab_to_linear_srgb(Vector3.new(L_clipped, C_clipped * a_, C_clipped * b_))
+	return oklab.oklab_to_linear_srgb(Vector3.new(L_clipped, C_clipped * a_, C_clipped * b_))
 end
 
-function Oklab.gamut_clip_project_to_0_5(rgb: Vector3): Vector3
+function oklab.gamut_clip_project_to_0_5(rgb: Vector3): Vector3
 	if rgb.X < 1 and rgb.Y < 1 and rgb.Z < 1 and rgb.X > 0 and rgb.Y > 0 and rgb.Z > 0 then
 		return rgb
 	end
 
-	local lab = Oklab.linear_srgb_to_oklab(rgb)
+	local lab = oklab.linear_srgb_to_oklab(rgb)
 
 	local L = lab.X
 	local eps = 0.00001
@@ -242,19 +242,19 @@ function Oklab.gamut_clip_project_to_0_5(rgb: Vector3): Vector3
 
 	local L0 = 0.5
 
-	local t = Oklab.find_gamut_intersection(a_, b_, L, C, L0)
+	local t = oklab.find_gamut_intersection(a_, b_, L, C, L0)
 	local L_clipped = L0 * (1 - t) + t * L
 	local C_clipped = t * C
 
-	return Oklab.oklab_to_linear_srgb(Vector3.new(L_clipped, C_clipped * a_, C_clipped * b_))
+	return oklab.oklab_to_linear_srgb(Vector3.new(L_clipped, C_clipped * a_, C_clipped * b_))
 end
 
-function Oklab.gamut_clip_project_to_L_cusp(rgb: Vector3): Vector3
+function oklab.gamut_clip_project_to_L_cusp(rgb: Vector3): Vector3
 	if rgb.X < 1 and rgb.Y < 1 and rgb.Z < 1 and rgb.X > 0 and rgb.Y > 0 and rgb.Z > 0 then
 		return rgb
 	end
 
-	local lab = Oklab.linear_srgb_to_oklab(rgb)
+	local lab = oklab.linear_srgb_to_oklab(rgb)
 
 	local L = lab.X
 	local eps = 0.00001
@@ -263,25 +263,25 @@ function Oklab.gamut_clip_project_to_L_cusp(rgb: Vector3): Vector3
 	local b_ = lab.Z / C
 
 	-- The cusp is computed here and in find_gamut_intersection, an optimised solution would only compute it once.
-	local L_cusp, C_cusp = Oklab.find_cusp(a_, b_)
+	local L_cusp, C_cusp = oklab.find_cusp(a_, b_)
 
 	local L0 = L_cusp
 
-	local t = Oklab.find_gamut_intersection(a_, b_, L, C, L0)
+	local t = oklab.find_gamut_intersection(a_, b_, L, C, L0)
 
 	local L_clipped = L0 * (1 - t) + t * L
 	local C_clipped = t * C
 
-	return Oklab.oklab_to_linear_srgb(Vector3.new(L_clipped, C_clipped * a_, C_clipped * b_))
+	return oklab.oklab_to_linear_srgb(Vector3.new(L_clipped, C_clipped * a_, C_clipped * b_))
 end
 
-function Oklab.gamut_clip_adaptive_L0_0_5(rgb: Vector3, alpha: number?): Vector3
+function oklab.gamut_clip_adaptive_L0_0_5(rgb: Vector3, alpha: number?): Vector3
 	if rgb.X < 1 and rgb.Y < 1 and rgb.Z < 1 and rgb.X > 0 and rgb.Y > 0 and rgb.Z > 0 then
 		return rgb
 	end
 	local alpha = alpha or 0.05
 
-	local lab = Oklab.linear_srgb_to_oklab(rgb)
+	local lab = oklab.linear_srgb_to_oklab(rgb)
 
 	local L = lab.X
 	local eps = 0.00001
@@ -293,20 +293,20 @@ function Oklab.gamut_clip_adaptive_L0_0_5(rgb: Vector3, alpha: number?): Vector3
 	local e1 = 0.5 + math.abs(Ld) + alpha * C
 	local L0 = 0.5 * (1 + math.sign(Ld) * (e1 - math.sqrt(e1 * e1 - 2 * math.abs(Ld))))
 
-	local t = Oklab.find_gamut_intersection(a_, b_, L, C, L0)
+	local t = oklab.find_gamut_intersection(a_, b_, L, C, L0)
 	local L_clipped = L0 * (1 - t) + t * L
 	local C_clipped = t * C
 
-	return Oklab.oklab_to_linear_srgb(Vector3.new(L_clipped, C_clipped * a_, C_clipped * b_))
+	return oklab.oklab_to_linear_srgb(Vector3.new(L_clipped, C_clipped * a_, C_clipped * b_))
 end
 
-function Oklab.gamut_clip_adaptive_L0_L_cusp(rgb: Vector3, alpha: number?): Vector3
+function oklab.gamut_clip_adaptive_L0_L_cusp(rgb: Vector3, alpha: number?): Vector3
 	if rgb.X < 1 and rgb.Y < 1 and rgb.Z < 1 and rgb.X > 0 and rgb.Y > 0 and rgb.Z > 0 then
 		return rgb
 	end
 	local alpha = alpha or 0.05
 
-	local lab = Oklab.linear_srgb_to_oklab(rgb)
+	local lab = oklab.linear_srgb_to_oklab(rgb)
 
 	local L = lab.X
 	local eps = 0.00001
@@ -315,7 +315,7 @@ function Oklab.gamut_clip_adaptive_L0_L_cusp(rgb: Vector3, alpha: number?): Vect
 	local b_ = lab.Z / C
 
 	-- The cusp is computed here and in find_gamut_intersection, an optimized solution would only compute it once.
-	local L_cusp, C_cusp = Oklab.find_cusp(a_, b_)
+	local L_cusp, C_cusp = oklab.find_cusp(a_, b_)
 
 	local Ld = L - L_cusp
 	local k = 2 * (if Ld > 0 then 1 - L_cusp else L_cusp)
@@ -323,18 +323,18 @@ function Oklab.gamut_clip_adaptive_L0_L_cusp(rgb: Vector3, alpha: number?): Vect
 	local e1 = 0.5 * k + math.abs(Ld) + alpha * C / k
 	local L0 = L_cusp + 0.5 * (math.sign(Ld) * (e1 - math.sqrt(e1 * e1 - 2 * k * math.abs(Ld))))
 
-	local t = Oklab.find_gamut_intersection(a_, b_, L, C, L0)
+	local t = oklab.find_gamut_intersection(a_, b_, L, C, L0)
 	local L_clipped = L0 * (1 - t) + t * L
 	local C_clipped = t * C
 
-	return Oklab.oklab_to_linear_srgb(Vector3.new(L_clipped, C_clipped * a_, C_clipped * b_))
+	return oklab.oklab_to_linear_srgb(Vector3.new(L_clipped, C_clipped * a_, C_clipped * b_))
 end
 
 --[[
 	ROBLOX EXTENSIONS
 ]]
 
-Oklab.default_gamut_clip = Oklab.gamut_clip_adaptive_L0_0_5
+oklab.default_gamut_clip = oklab.gamut_clip_adaptive_L0_0_5
 
 local function component_to_gamma(x: number): number
 	if x >= 0.0031308 then
@@ -352,15 +352,15 @@ local function component_to_linear(x: number): number
 	end
 end
 
-function Oklab.color3_to_linear_srgb(c: Color3): Vector3
+function oklab.color3_to_linear_srgb(c: Color3): Vector3
 	return Vector3.new(component_to_linear(c.R), component_to_linear(c.G), component_to_linear(c.B))
 end
 
-function Oklab.linear_srgb_to_color3(c: Vector3, use_default_gamut_clip: boolean?): Color3
+function oklab.linear_srgb_to_color3(c: Vector3, use_default_gamut_clip: boolean?): Color3
 	if use_default_gamut_clip == false then
 		return Color3.new(component_to_gamma(c.X), component_to_gamma(c.Y), component_to_gamma(c.Z))
 	else
-		local c = Oklab.default_gamut_clip(c)
+		local c = oklab.default_gamut_clip(c)
 		return Color3.new(
 			math.clamp(component_to_gamma(c.X), 0, 1),
 			math.clamp(component_to_gamma(c.Y), 0, 1),
@@ -373,12 +373,71 @@ end
 	LCH EXTENSIONS
 ]]
 
-function Oklab.oklch_to_oklab(oklch: Vector3): Vector3
+function oklab.oklch_to_oklab(oklch: Vector3): Vector3
 	return Vector3.new(oklch.X, oklch.Y * math.cos(oklch.Z * math.tau), oklch.Y * math.sin(oklch.Z * math.tau))
 end
 
-function Oklab.oklab_to_oklch(oklab: Vector3): Vector3
+function oklab.oklab_to_oklch(oklab: Vector3): Vector3
 	return Vector3.new(oklab.X, math.sqrt(oklab.Y ^ 2 + oklab.Z ^ 2), (math.atan2(oklab.Z, oklab.Y) / math.tau) % 1)
 end
 
-return Oklab
+--[[
+	INK EXTENSIONS
+]]
+
+function oklab.color3_to_lab(c: Color3): Vector3
+	return oklab.linear_srgb_to_oklab(oklab.color3_to_linear_srgb(c))
+end
+
+function oklab.lab_to_color3(c: Vector3): Color3
+	return oklab.linear_srgb_to_color3(oklab.oklab_to_linear_srgb(c))
+end
+
+function oklab.color3_to_lch(c: Color3): Vector3
+	return oklab.oklab_to_oklch(oklab.linear_srgb_to_oklab(oklab.color3_to_lab(c)))
+end
+
+function oklab.lch_to_color3(c: Vector3): Color3
+	return oklab.linear_srgb_to_color3(oklab.oklab_to_linear_srgb(oklab.oklch_to_oklab(c)))
+end
+
+function oklab.lighten(lab: Vector3, amount: number): Vector3
+	return Vector3.new(math.clamp(lab.X + amount, 0, 1), lab.Y, lab.Z)
+end
+
+function oklab.saturate(lab: Vector3, amount: number): Vector3
+	local a, b = lab.Y, lab.Z
+	local c = math.sqrt(a * a + b * b)
+	if c < 1e-6 then
+		return lab
+	end
+	local scale = math.max(c + amount, 0) / c
+	return Vector3.new(lab.X, a * scale, b * scale)
+end
+
+function oklab.rotate_hue(lab: Vector3, degrees: number): Vector3
+	local r = math.rad(degrees)
+	local cos, sin = math.cos(r), math.sin(r)
+	local a, b = lab.Y, lab.Z
+	return Vector3.new(lab.X, a * cos - b * sin, a * sin + b * cos)
+end
+
+function oklab.lighten_color(c: Color3, amount: number): Color3
+	return oklab.lab_to_color3(oklab.lighten(oklab.color3_to_lab(c), amount))
+end
+
+function oklab.saturate_color(c: Color3, amount: number): Color3
+	return oklab.lab_to_color3(oklab.saturate(oklab.color3_to_lab(c), amount))
+end
+
+function oklab.rotate_hue_color(c: Color3, degrees: number): Color3
+	return oklab.lab_to_color3(oklab.rotate_hue(oklab.color3_to_lab(c), degrees))
+end
+
+-- the code bllow was written by hai during drop block
+-- i would like to memorialize such a legend
+--[[
+print("hello world!")
+]]
+
+return oklab
