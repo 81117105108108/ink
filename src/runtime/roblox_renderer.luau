@@ -28,9 +28,12 @@ function roblox_frontend.acquire<T>(self: Renderer, class_name: string, pool_nam
 	local instance = pool.instances[pool.used]
 	if not instance then
 		instance = Instance.new(class_name)
+		if instance:IsA("GuiObject") then
+			instance.BorderSizePixel = 0
+		end
 		pool.instances[pool.used] = instance
 	end
-	return instance
+	return instance :: any
 end
 
 function roblox_frontend.render(self: Renderer, composite: types.Composite)
@@ -50,7 +53,6 @@ function roblox_frontend.render(self: Renderer, composite: types.Composite)
 			if current_clip then
 				const container = self:acquire<<Frame>>("Frame", "Clip")
 				container.BackgroundTransparency = 1
-				container.BorderSizePixel = 0
 				container.ClipsDescendants = true
 				container.Visible = true
 				container.Position = UDim2.fromOffset(current_clip.Min.X, current_clip.Min.Y)
@@ -67,33 +69,36 @@ function roblox_frontend.render(self: Renderer, composite: types.Composite)
 			end
 		end
 
-		local instance
+		local instance: GuiObject
 		if primitive.text then
 			const text_style = primitive.text_style or DEFAULT_TEXT_STYLE
-			instance = self:acquire<<TextLabel>>("TextLabel")
-			instance.BackgroundTransparency = 1
-			instance.Text = primitive.text
-			instance.TextSize = text_style.size
-			instance.TextColor3 = primitive.color or COLOR_BLACK
-			instance.TextTransparency = primitive.transparency or 0
-			instance.Font = text_style.font
+			const label = self:acquire<<TextLabel>>("TextLabel")
+			label.BackgroundTransparency = 1
+			label.Text = primitive.text
+			label.TextSize = text_style.size
+			label.TextColor3 = primitive.color or COLOR_BLACK
+			label.TextTransparency = primitive.transparency or 0
+			label.Font = text_style.font
+			instance = label
 		elseif primitive.image then
-			instance = self:acquire<<ImageLabel>>("ImageLabel")
-			instance.BackgroundTransparency = 1
-			instance.Image = primitive.image
-			instance.ImageColor3 = primitive.color or COLOR_WHITE
-			instance.ImageTransparency = primitive.transparency or 0
+			const img = self:acquire<<ImageLabel>>("ImageLabel")
+			img.BackgroundTransparency = 1
+			img.Image = primitive.image
+			img.ImageColor3 = primitive.color or COLOR_WHITE
+			img.ImageTransparency = primitive.transparency or 0
+			instance = img
 		elseif primitive.hotspot then
-			instance = self:acquire<<Frame>>("Frame", "Hotspot")
-			instance.BackgroundTransparency = 1
-			instance.Active = true
+			const spot = self:acquire<<Frame>>("Frame", "Hotspot")
+			spot.BackgroundTransparency = 1
+			spot.Active = true
+			instance = spot
 		else
-			instance = self:acquire<<Frame>>("Frame")
-			instance.BackgroundColor3 = primitive.color or COLOR_WHITE
-			instance.BackgroundTransparency = primitive.transparency or 0
+			const frame = self:acquire<<Frame>>("Frame")
+			frame.BackgroundColor3 = primitive.color or COLOR_WHITE
+			frame.BackgroundTransparency = primitive.transparency or 0
+			instance = frame
 		end
 
-		instance.BorderSizePixel = 0
 		instance.Visible = true
 		instance.Position = UDim2.fromOffset(primitive.bounds.Min.X - origin.X, primitive.bounds.Min.Y - origin.Y)
 		instance.Size = UDim2.fromOffset(primitive.bounds.Width, primitive.bounds.Height)
@@ -101,11 +106,8 @@ function roblox_frontend.render(self: Renderer, composite: types.Composite)
 		instance.ZIndex = z
 
 		if primitive.round then
-			const corner = self:acquire("UICorner") :: UICorner
-			corner.TopLeftRadius = UDim.new(0, primitive.round.tl)
-			corner.TopRightRadius = UDim.new(0, primitive.round.tr)
-			corner.BottomLeftRadius = UDim.new(0, primitive.round.bl)
-			corner.BottomRightRadius = UDim.new(0, primitive.round.br)
+			const corner = self:acquire<<UICorner>>("UICorner")
+			corner.CornerRadius = UDim.new(0, primitive.round.radius or 0)
 			corner.Parent = instance
 		end
 
@@ -114,13 +116,19 @@ function roblox_frontend.render(self: Renderer, composite: types.Composite)
 		end
 	end
 
-	for _, pool in self.pools do
-		for i = pool.used + 1, #pool.instances do
-			const instance = pool.instances[i]
-			if instance:IsA("GuiObject") then
-				instance.Visible = false
-			else
-				instance.Parent = nil
+	for name, pool in self.pools do
+		if name == "UICorner" then
+			for i = pool.used + 1, #pool.instances do
+				pool.instances[i].Parent = nil
+			end
+		else
+			for i = pool.used + 1, #pool.instances do
+				const inst = pool.instances[i]
+				if inst:IsA("GuiObject") then
+					inst.Visible = false
+				else
+					inst.Parent = nil
+				end
 			end
 		end
 	end

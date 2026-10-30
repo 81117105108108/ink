@@ -5,6 +5,11 @@ const types = require("../types")
 const roblox_intent = {}
 roblox_intent.__index = roblox_intent
 
+--[=[
+	@class RobloxIntent
+	Tracks Roblox UserInputService input events (mouse, touch, wheel, keyboard)
+	and maps screen coordinates into local UI space.
+]=]
 export type RobloxIntent = setmetatable<
 	{
 		pending: types.Intent, -- built up by events between frames
@@ -31,16 +36,21 @@ const function new_intent(): types.Intent
 	}
 end
 
+--- Creates a new RobloxIntent listener.
+--- `to_local` transforms screen Vector2 coordinates to coordinates relative to your root container.
 function roblox_intent.new(to_local: (Vector2) -> Vector2): RobloxIntent
-	const self: RobloxIntent = setmetatable({
-		pending = new_intent(),
-		state = { hotspots = {}, active = nil },
-		to_local = to_local,
-		screen_pointer = Vector2.zero,
-		last_pointer = Vector2.zero,
-		touch = nil,
-		connections = {},
-	}, roblox_intent)
+	const self: RobloxIntent = setmetatable(
+		{
+			pending = new_intent(),
+			state = { hotspots = {}, active = nil },
+			to_local = to_local,
+			screen_pointer = Vector2.zero,
+			last_pointer = Vector2.zero,
+			touch = nil,
+			connections = {},
+		},
+		roblox_intent
+	)
 
 	const pending = self.pending
 
@@ -94,6 +104,7 @@ function roblox_intent.new(to_local: (Vector2) -> Vector2): RobloxIntent
 	return self
 end
 
+--- Takes a snapshot of pending input events accrued since the last frame and resets one-shot flags.
 function roblox_intent.take(self: RobloxIntent): types.Intent
 	const pending = self.pending
 	const pointer = self.to_local(self.screen_pointer)
@@ -102,15 +113,38 @@ function roblox_intent.take(self: RobloxIntent): types.Intent
 	pending.pointer_delta = pointer - self.last_pointer
 	self.last_pointer = pointer
 
-	const snapshot = table.clone(pending)
+	const pressed_keys = pending.keys_pressed
+	const held_keys = pending.keys_held
+
+	local copy_pressed = {}
+	for k, v in pressed_keys do
+		copy_pressed[k] = v
+	end
+	local copy_held = {}
+	for k, v in held_keys do
+		copy_held[k] = v
+	end
+
+	const snapshot: types.Intent = {
+		pointer = pending.pointer,
+		pointer_delta = pending.pointer_delta,
+		down = pending.down,
+		pressed = pending.pressed,
+		released = pending.released,
+		wheel = pending.wheel,
+		keys_held = copy_held,
+		keys_pressed = copy_pressed,
+	}
+
 	pending.pressed = false
 	pending.released = false
 	pending.wheel = 0
-	pending.keys_pressed = {}
+	table.clear(pending.keys_pressed)
 
 	return snapshot
 end
 
+--- Registers the rendered composite's hotspots for hit-testing in subsequent frames.
 function roblox_intent.commit(self: RobloxIntent, composite: types.Composite)
 	const hotspots = self.state.hotspots
 	table.clear(hotspots)

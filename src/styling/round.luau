@@ -1,14 +1,18 @@
 local types = require("../types")
 
 const function round(c: types.Composite, amount: number | types.RoundStyle)
-	c = table.clone(c)
-	const primitives = table.clone(c.primitives)
-	const round: types.RoundStyle = type(amount) == "table" and amount
-		or { tl = amount, tr = amount, bl = amount, br = amount }
-	for _, primitive in primitives do
-		primitive.round = round
+	const style: types.RoundStyle = if type(amount) == "table" then amount else { radius = amount }
+	const count = #c.primitives
+	const out_primitives = table.create(count)
+	for i = 1, count do
+		const p = table.clone(c.primitives[i])
+		p.round = style
+		out_primitives[i] = p
 	end
-	return c
+	return {
+		primitives = out_primitives,
+		bounds = c.bounds,
+	}
 end
 
 return round

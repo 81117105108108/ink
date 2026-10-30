@@ -16,11 +16,13 @@ return {
 		label = "Continue Game",
 	},
 	render = ink.roblox_story(function(scope, props)
-		local content = {
-			ink.image(ink.rect_sized(24, 24), "rbxassetid://8517323790"),
-			ink.align(ink.text(props.controls.label, BUTTON_STYLE), ink.rect_sized(0, 24), nil, 0.5),
-		}
-		content = ink.h_stack(content, 8)
+		local content = ink.h_stack(
+			{
+				ink.image(ink.rect_sized(24, 24), "rbxassetid://8517323790"),
+				ink.align(ink.text(props.controls.label, BUTTON_STYLE), ink.rect_sized(0, 24), nil, 0.5),
+			},
+			8
+		)
 		content = ink.pad_xy(content, 16, 12)
 
 		local bg = ink.solid(content.bounds)
@@ -49,11 +51,14 @@ return {
 		end
 		count_scope:set(count)
 
-		local button = ink.compose({
-			shadow,
-			surface,
-			spot,
-		}, shadow.bounds)
+		local button = ink.compose(
+			{
+				shadow,
+				surface,
+				spot,
+			},
+			shadow.bounds
+		)
 
 		const viewport_size = props.target.AbsoluteSize
 		button = ink.align(button, ink.rect(0, 0, viewport_size.X, viewport_size.Y), 0.5, 0.5)

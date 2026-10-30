@@ -28,7 +28,7 @@ const function tween<T>(
 	style: Enum.EasingStyle?,
 	direction: Enum.EasingDirection?
 ): T
-	const state = s:once(new_state<<T>>)
+	const state = s:once(new_state) :: TweenState<T>
 	const now = s:time()
 	const kind = typeof(goal)
 	const lerp = lerp_type[kind] or error(`Cannot tween a {kind}`)
