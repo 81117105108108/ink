@@ -1,0 +1,45 @@
+# Builds the docs and deploys them to GitHub Pages on every push to the branch
+# below (your repository's default branch when this file was scaffolded).
+# Set the repository's Pages source to "GitHub Actions" and this workflow runs
+# as-is: Node is the only tool to install, and configure-pages reports the base
+# URL so project-pages paths and custom domains resolve without a [docs] url.
+name: Docs
+on:
+    push:
+        branches: ["main"]
+permissions:
+    contents: read
+    pages: write
+    id-token: write
+concurrency:
+    group: pages
+    cancel-in-progress: false
+jobs:
+    publish:
+        runs-on: ubuntu-latest
+        environment:
+            name: github-pages
+            url: ${{ steps.deployment.outputs.page_url }}
+        steps:
+            - uses: actions/checkout@v6
+            - uses: actions/setup-node@v6
+              with: { node-version: "22" }
+            # The docs directory's package.json is generated, so there is no lockfile
+            # to key on; the pinned version below determines both the npm dependencies
+            # and the Lute binary downloaded into ~/.cache/luaudocs.
+            - uses: actions/cache@v4
+              with:
+                  path: |
+                      ~/.npm
+                      ~/.cache/luaudocs
+                      .luaudocs/node_modules
+                  key: ${{ runner.os }}-luaudocs-0.3.0
+            - id: pages
+              uses: actions/configure-pages@v6
+            # Pinned so a later release cannot change this deploy under you; bump the
+            # version deliberately, the way you would any other dependency.
+            - run: npx luaudocs@0.3.0 build --url "${{ steps.pages.outputs.base_url }}"
+            - uses: actions/upload-pages-artifact@v5
+              with: { path: ".luaudocs/.vitepress/dist" }
+            - id: deployment
+              uses: actions/deploy-pages@v5

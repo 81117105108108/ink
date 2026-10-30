@@ -1,6 +1,6 @@
 const compose = require("../composites/compose")
-const translate = require("./translate")
 const types = require("../types")
+const translate = require("./translate")
 
 --- Stacks composites vertically from top to bottom with an optional `gap` between items.
 --- Positions elements sequentially along Y starting from `composites[1].bounds.Min.Y`, leaving X offsets untouched.

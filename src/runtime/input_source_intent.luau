@@ -1,27 +1,22 @@
-const UserInputService = game:GetService("UserInputService")
-
 const types = require("../types")
 
-const roblox_intent = {}
-roblox_intent.__index = roblox_intent
+const input_source_intent = {}
+input_source_intent.__index = input_source_intent
 
 --[=[
 	@class RobloxIntent
-	Tracks Roblox UserInputService input events (mouse, touch, wheel, keyboard)
+	Tracks input events (mouse, touch, wheel, keyboard) from an `IntentSource`
 	and maps screen coordinates into local UI space.
 ]=]
-export type RobloxIntent = setmetatable<
-	{
-		pending: types.Intent, -- built up by events between frames
-		state: types.IntentState, -- hotspots and the active hotspot
-		to_local: (Vector2) -> Vector2,
-		screen_pointer: Vector2,
-		last_pointer: Vector2,
-		touch: InputObject?,
-		connections: { RBXScriptConnection },
-	},
-	typeof(roblox_intent)
->
+export type RobloxIntent = setmetatable<{
+	pending: types.Intent,
+	state: types.IntentState,
+	to_local: (Vector2) -> Vector2,
+	screen_pointer: Vector2,
+	last_pointer: Vector2,
+	touch: InputObject?,
+	connections: { RBXScriptConnection },
+}, typeof(input_source_intent)>
 
 const function new_intent(): types.Intent
 	return {
@@ -36,9 +31,9 @@ const function new_intent(): types.Intent
 	}
 end
 
---- Creates a new RobloxIntent listener.
+--- Creates a new input intent listener bound to `source`.
 --- `to_local` transforms screen Vector2 coordinates to coordinates relative to your root container.
-function roblox_intent.new(to_local: (Vector2) -> Vector2): RobloxIntent
+function input_source_intent.new(source: types.IntentSource, to_local: (Vector2) -> Vector2): RobloxIntent
 	const self: RobloxIntent = setmetatable(
 		{
 			pending = new_intent(),
@@ -49,7 +44,7 @@ function roblox_intent.new(to_local: (Vector2) -> Vector2): RobloxIntent
 			touch = nil,
 			connections = {},
 		},
-		roblox_intent
+		input_source_intent
 	)
 
 	const pending = self.pending
@@ -61,7 +56,7 @@ function roblox_intent.new(to_local: (Vector2) -> Vector2): RobloxIntent
 
 	table.insert(
 		self.connections,
-		UserInputService.InputBegan:Connect(function(input)
+		source.InputBegan:Connect(function(input)
 			if is_primary(input) then
 				if input.UserInputType == Enum.UserInputType.Touch then
 					self.touch = input
@@ -78,7 +73,7 @@ function roblox_intent.new(to_local: (Vector2) -> Vector2): RobloxIntent
 
 	table.insert(
 		self.connections,
-		UserInputService.InputChanged:Connect(function(input)
+		source.InputChanged:Connect(function(input)
 			const t = input.UserInputType
 			if t == Enum.UserInputType.MouseMovement or (t == Enum.UserInputType.Touch and input == self.touch) then
 				self.screen_pointer = Vector2.new(input.Position.X, input.Position.Y)
@@ -90,7 +85,7 @@ function roblox_intent.new(to_local: (Vector2) -> Vector2): RobloxIntent
 
 	table.insert(
 		self.connections,
-		UserInputService.InputEnded:Connect(function(input)
+		source.InputEnded:Connect(function(input)
 			if is_primary(input) then
 				self.touch = nil
 				pending.down = false
@@ -105,7 +100,7 @@ function roblox_intent.new(to_local: (Vector2) -> Vector2): RobloxIntent
 end
 
 --- Takes a snapshot of pending input events accrued since the last frame and resets one-shot flags.
-function roblox_intent.take(self: RobloxIntent): types.Intent
+function input_source_intent.take(self: RobloxIntent): types.Intent
 	const pending = self.pending
 	const pointer = self.to_local(self.screen_pointer)
 
@@ -145,7 +140,7 @@ function roblox_intent.take(self: RobloxIntent): types.Intent
 end
 
 --- Registers the rendered composite's hotspots for hit-testing in subsequent frames.
-function roblox_intent.commit(self: RobloxIntent, composite: types.Composite)
+function input_source_intent.commit(self: RobloxIntent, composite: types.Composite)
 	const hotspots = self.state.hotspots
 	table.clear(hotspots)
 	for _, primitive in composite.primitives do
@@ -157,7 +152,7 @@ function roblox_intent.commit(self: RobloxIntent, composite: types.Composite)
 	end
 end
 
-function roblox_intent.destroy(self: RobloxIntent)
+function input_source_intent.destroy(self: RobloxIntent)
 	for _, connection in self.connections do
 		connection:Disconnect()
 	end
@@ -166,4 +161,4 @@ function roblox_intent.destroy(self: RobloxIntent)
 	self.state.active = nil
 end
 
-return table.freeze(roblox_intent)
+return table.freeze(input_source_intent)

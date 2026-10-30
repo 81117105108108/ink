@@ -4,6 +4,7 @@ local types = require("../types")
 
 local size_cache: { [string]: Vector2 } = {}
 
+--- Creates a composite containing measured text.
 const function text(content: string, style: types.TextStyle, max_width: number?): types.Composite
 	const width = max_width or math.huge
 	const cache_key = `{content}\0{style.size}\0{style.font.Value}\0{width}`
